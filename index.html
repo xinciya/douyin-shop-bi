@@ -6,49 +6,49 @@
 <title>千问官方旗舰店 · 罗盘BI</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-:root{--bg:#0d0d1a;--card:rgba(255,255,255,0.035);--border:rgba(255,255,255,0.08);--text:#e0e0e8;--muted:#7a7a90;--blue:#5b9cf6;--purple:#9b7bea;--green:#3dd68c;--red:#f06060;--yellow:#f0b940}
+:root{--bg:#f5f6fa;--card:#ffffff;--border:#e8ecf0;--text:#1a1a2e;--muted:#6b7280;--blue:#2563eb;--purple:#7c3aed;--green:#059669;--red:#dc2626;--yellow:#d97706}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'PingFang SC',sans-serif;background:var(--bg);color:var(--text);font-size:13px}
-.hd{padding:12px 24px;background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.hd{padding:12px 24px;background:#fff;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
 .hd h1{font-size:17px;background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .hd .m{font-size:11px;color:var(--muted)}
 .ct{max-width:1400px;margin:0 auto;padding:16px}
 .st{font-size:13px;font-weight:600;margin:16px 0 8px;padding-left:10px;border-left:3px solid var(--blue)}
 .g{display:grid;gap:10px}.g5{grid-template-columns:repeat(5,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}
-.c{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px}
+.c{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
 .kl{font-size:11px;color:var(--muted);margin-bottom:2px}
-.kv{font-size:22px;font-weight:700;color:#fff}.kv.s{font-size:16px}
+.kv{font-size:22px;font-weight:700;color:var(--text)}.kv.s{font-size:16px}
 .ks{font-size:11px;margin-top:3px;color:var(--muted)}
 .up{color:var(--green)}.dn{color:var(--red)}
-.cc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px}
+.cc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
 .ct2{font-size:12px;font-weight:600;margin-bottom:8px;color:var(--muted)}
 
 /* 波动归因 - 核心 */
 .vol{border-radius:10px;padding:16px;margin-bottom:12px;border:1px solid}
-.vol.up-vol{background:rgba(61,214,140,0.04);border-color:rgba(61,214,140,0.25)}
-.vol.dn-vol{background:rgba(240,96,96,0.04);border-color:rgba(240,96,96,0.25)}
+.vol.up-vol{background:#f0fdf4;border-color:#bbf7d0}
+.vol.dn-vol{background:#fef2f2;border-color:#fecaca}
 .vol-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .vol-hd .date{font-weight:600;font-size:14px}
 .vol-hd .pct{font-size:18px;font-weight:700}
-.vol-reason{background:rgba(255,255,255,0.04);border-radius:8px;padding:10px 12px;margin-bottom:10px}
+.vol-reason{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px;margin-bottom:10px}
 .vol-reason .title{font-size:12px;font-weight:600;margin-bottom:6px;color:var(--purple)}
 .vol-bar{display:flex;gap:8px;flex-wrap:wrap}
-.vol-bar .f{padding:4px 10px;border-radius:5px;font-size:11px;background:rgba(255,255,255,0.06);display:flex;align-items:center;gap:4px}
+.vol-bar .f{padding:4px 10px;border-radius:5px;font-size:11px;background:#f1f5f9;border:1px solid #e2e8f0;display:flex;align-items:center;gap:4px}
 .vol-bar .f .arrow{font-weight:700}
 .vol-prods{margin-top:8px}
 .vol-prods .title{font-size:12px;font-weight:600;color:var(--yellow);margin-bottom:6px}
-.prod-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px}
+.prod-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9;font-size:12px}
 .prod-row:last-child{border:none}
 .prod-row .nm{max-width:55%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .prod-row .ch{font-weight:600}
-.conclusion{background:rgba(91,156,246,0.08);border:1px solid rgba(91,156,246,0.2);border-radius:8px;padding:10px 14px;margin-top:10px;font-size:12px;line-height:1.6}
+.conclusion{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;margin-top:10px;font-size:12px;line-height:1.6;color:#1e40af}
 .conclusion b{color:var(--blue)}
 
 .funnel{display:flex;align-items:center;gap:4px;padding:8px 0}
-.fs{flex:1;text-align:center;padding:8px 4px;border-radius:6px;background:rgba(255,255,255,0.03)}
-.fs .n{font-size:14px;font-weight:700;color:#fff}.fs .l{font-size:10px;color:var(--muted);margin-top:2px}
-.fa{font-size:14px;color:#4b5563}.fr{font-size:10px;color:var(--purple);text-align:center}
-.lr{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;background:rgba(255,255,255,0.02);margin-bottom:4px}
+.fs{flex:1;text-align:center;padding:8px 4px;border-radius:6px;background:#f8fafc;border:1px solid #e2e8f0}
+.fs .n{font-size:14px;font-weight:700;color:var(--text)}.fs .l{font-size:10px;color:var(--muted);margin-top:2px}
+.fa{font-size:14px;color:#9ca3af}.fr{font-size:10px;color:var(--purple);text-align:center}
+.lr{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;background:#f8fafc;margin-bottom:4px}
 .ld{width:6px;height:6px;border-radius:50%;background:var(--green);animation:p 2s infinite}
 @keyframes p{0%,100%{opacity:1}50%{opacity:.3}}
 .lr .n{flex:1;font-size:12px}.lr .g{font-size:12px;font-weight:600;color:var(--blue)}
@@ -58,7 +58,7 @@ body{font-family:-apple-system,'PingFang SC',sans-serif;background:var(--bg);col
 <body>
 <div class="hd">
   <h1>千问官方旗舰店 · 电商罗盘BI</h1>
-  <div class="m">2026-06-09 16:55 | #28名 (↑6)</div>
+  <div class="m">2026-06-09 17:01 | #28名 (↑6)</div>
 </div>
 <div class="ct">
 
@@ -170,10 +170,10 @@ body{font-family:-apple-system,'PingFang SC',sans-serif;background:var(--bg);col
 </div>
 
 <script>
-Chart.defaults.color='#7a7a90';Chart.defaults.borderColor='rgba(255,255,255,0.05)';
+Chart.defaults.color='#4b5563';Chart.defaults.borderColor='#e5e7eb';
 const L=["06-02","06-03","06-04","06-05","06-06","06-07","06-08"];
-new Chart(document.getElementById('c1'),{type:'bar',data:{labels:L,datasets:[{data:["35.8","36.0","31.1","29.5","47.2","47.3","45.3"],backgroundColor:["rgba(91,156,246,0.6)","rgba(91,156,246,0.6)","rgba(240,96,96,0.7)","rgba(91,156,246,0.6)","rgba(61,214,140,0.7)","rgba(91,156,246,0.6)","rgba(91,156,246,0.6)"],borderRadius:4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{font:{size:10}}}}}});
-new Chart(document.getElementById('c2'),{type:'bar',data:{labels:L,datasets:[{label:'订单',data:[185,189,155,155,242,233,197],backgroundColor:'rgba(155,123,234,0.5)',borderRadius:3,yAxisID:'y'},{label:'客单价',data:["3967","4039","4259","3921","3810","3972","4345"],type:'line',borderColor:'var(--yellow)',tension:0.3,pointRadius:2,yAxisID:'y1'}]},options:{plugins:{legend:{labels:{font:{size:10}}}},scales:{y:{beginAtZero:true,ticks:{font:{size:10}}},y1:{position:'right',grid:{drawOnChartArea:false},ticks:{font:{size:10}}}}}});
-new Chart(document.getElementById('c3'),{type:'line',data:{labels:L,datasets:[{label:'曝光→点击',data:["6.7","6.5","2.6","3.8","1.3","8.9","8.2"],borderColor:'var(--blue)',tension:0.3,pointRadius:2},{label:'点击→成交',data:["2.05","1.59","0.19","1.00","0.60","1.22","1.30"],borderColor:'var(--green)',tension:0.3,pointRadius:2},{label:'退款率',data:["45.2","44.2","38.0","44.8","38.5","35.7","22.2"],borderColor:'var(--red)',borderDash:[4,3],tension:0.3,pointRadius:2}]},options:{plugins:{legend:{labels:{font:{size:10}}}},scales:{y:{ticks:{callback:v=>v+'%',font:{size:10}}}}}});
+new Chart(document.getElementById('c1'),{type:'bar',data:{labels:L,datasets:[{data:["35.8","36.0","31.1","29.5","47.2","47.3","45.3"],backgroundColor:["rgba(59,130,246,0.7)","rgba(59,130,246,0.7)","rgba(239,68,68,0.75)","rgba(59,130,246,0.7)","rgba(16,185,129,0.75)","rgba(59,130,246,0.7)","rgba(59,130,246,0.7)"],borderRadius:4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{font:{size:10}}}}}});
+new Chart(document.getElementById('c2'),{type:'bar',data:{labels:L,datasets:[{label:'订单',data:[185,189,155,155,242,233,197],backgroundColor:'rgba(124,58,237,0.65)',borderRadius:3,yAxisID:'y'},{label:'客单价',data:["3967","4039","4259","3921","3810","3972","4345"],type:'line',borderColor:'#f59e0b',borderWidth:2.5,tension:0.3,pointRadius:3,pointBackgroundColor:'#f59e0b',yAxisID:'y1'}]},options:{plugins:{legend:{labels:{font:{size:10}}}},scales:{y:{beginAtZero:true,ticks:{font:{size:10}}},y1:{position:'right',grid:{drawOnChartArea:false},ticks:{font:{size:10}}}}}});
+new Chart(document.getElementById('c3'),{type:'line',data:{labels:L,datasets:[{label:'曝光→点击',data:["6.7","6.5","2.6","3.8","1.3","8.9","8.2"],borderColor:'#f97316',borderWidth:2.5,tension:0.3,pointRadius:3,pointBackgroundColor:'#f97316'},{label:'点击→成交',data:["2.05","1.59","0.19","1.00","0.60","1.22","1.30"],borderColor:'#2563eb',borderWidth:2.5,tension:0.3,pointRadius:3,pointBackgroundColor:'#2563eb'},{label:'退款率',data:["45.2","44.2","38.0","44.8","38.5","35.7","22.2"],borderColor:'#dc2626',borderWidth:2,borderDash:[5,3],tension:0.3,pointRadius:2,pointBackgroundColor:'#dc2626'}]},options:{plugins:{legend:{labels:{font:{size:10},usePointStyle:true}}},scales:{y:{ticks:{callback:v=>v+'%',font:{size:10}}}}}});
 </script>
 </body></html>
