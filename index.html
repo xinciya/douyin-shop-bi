@@ -12,183 +12,331 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'PingFang SC', 
 .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 1px; }
 .header .subtitle { opacity: 0.85; margin-top: 8px; font-size: 14px; }
 .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
-.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 28px; }
-.kpi-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s; }
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+.kpi-card { background: white; border-radius: 16px; padding: 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s; }
 .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
-.kpi-label { font-size: 13px; color: #8c8c8c; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-.kpi-value { font-size: 32px; font-weight: 700; margin: 8px 0 4px; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.kpi-sub { font-size: 12px; color: #bbb; }
-.chart-section { background: white; border-radius: 16px; padding: 28px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-.chart-section h2 { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #2d2d2d; }
+.kpi-label { font-size: 12px; color: #8c8c8c; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+.kpi-value { font-size: 28px; font-weight: 700; margin: 6px 0 4px; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.kpi-sub { font-size: 11px; color: #bbb; }
+.section { background: white; border-radius: 16px; padding: 28px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.section h2 { font-size: 17px; font-weight: 600; margin-bottom: 20px; color: #2d2d2d; }
 .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
 @media (max-width: 900px) { .chart-row { grid-template-columns: 1fr; } }
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th { background: #f8f9fc; padding: 12px 16px; text-align: left; font-weight: 600; color: #555; border-bottom: 2px solid #eee; }
-td { padding: 10px 16px; border-bottom: 1px solid #f0f0f0; }
+th { background: #f8f9fc; padding: 10px 14px; text-align: left; font-weight: 600; color: #555; border-bottom: 2px solid #eee; white-space: nowrap; }
+td { padding: 9px 14px; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
 tr:hover td { background: #fafbff; }
 .positive { color: #10b981; font-weight: 600; }
 .negative { color: #ef4444; font-weight: 600; }
-.attribution-card { background: #fafbff; border-radius: 12px; padding: 20px; margin-bottom: 16px; border-left: 4px solid #667eea; }
-.attribution-card h3 { font-size: 15px; margin-bottom: 12px; }
-.attr-items { display: flex; flex-wrap: wrap; gap: 8px; }
-.attr-item { background: white; border-radius: 8px; padding: 8px 12px; font-size: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.neutral { color: #6b7280; }
+.cause-card { background: #fafbff; border-radius: 12px; padding: 20px; margin-bottom: 16px; border-left: 4px solid #667eea; }
+.cause-card.warn { border-left-color: #f59e0b; }
+.cause-card.danger { border-left-color: #ef4444; }
+.cause-card h3 { font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.cause-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+.tag-traffic { background: #fef3c7; color: #92400e; }
+.tag-conv { background: #dbeafe; color: #1e40af; }
+.tag-aov { background: #f3e8ff; color: #6b21a8; }
+.cause-detail { font-size: 13px; color: #555; line-height: 1.8; margin-top: 8px; }
+.cat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.cat-card { background: #fafbff; border-radius: 12px; padding: 16px; border: 1px solid #e8ecf4; }
+.cat-card h4 { font-size: 14px; margin-bottom: 10px; color: #333; }
+.cat-card .cat-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; border-bottom: 1px dashed #eee; }
+.cat-card .cat-row:last-child { border-bottom: none; }
 .footer { text-align: center; padding: 20px; color: #999; font-size: 12px; }
 </style>
 </head>
 <body>
 <div class="header">
   <h1>抖音小店数据BI看板</h1>
-  <div class="subtitle">数据周期：2026-06-03 至 2026-06-09 ｜ 更新时间：2026/6/9 11:35:44</div>
+  <div class="subtitle">数据周期：2026-06-03 至 2026-06-09 ｜ 更新时间：2026/6/9 11:35</div>
 </div>
 <div class="container">
+  <!-- KPI -->
   <div class="kpi-grid">
-    <div class="kpi-card"><div class="kpi-label">总GMV</div><div class="kpi-value">¥381.3万</div><div class="kpi-sub">日均 ¥54.5万</div></div>
-    <div class="kpi-card"><div class="kpi-label">总订单</div><div class="kpi-value">1,000</div><div class="kpi-sub">日均 143 单</div></div>
-    <div class="kpi-card"><div class="kpi-label">客单价</div><div class="kpi-value">¥3,813</div><div class="kpi-sub">7 天数据</div></div>
-    <div class="kpi-card"><div class="kpi-label">在售商品</div><div class="kpi-value">38</div><div class="kpi-sub">SKU数</div></div>
+    <div class="kpi-card"><div class="kpi-label">总销售额</div><div class="kpi-value">¥381.3万</div><div class="kpi-sub">日均 ¥54.5万</div></div>
+    <div class="kpi-card"><div class="kpi-label">总销量</div><div class="kpi-value">1,845件</div><div class="kpi-sub">日均 264 件</div></div>
+    <div class="kpi-card"><div class="kpi-label">总订单</div><div class="kpi-value">1,000单</div><div class="kpi-sub">件/单 = 1.85</div></div>
+    <div class="kpi-card"><div class="kpi-label">客单价</div><div class="kpi-value">¥3,813</div><div class="kpi-sub">件均价 ¥2,067</div></div>
+    <div class="kpi-card"><div class="kpi-label">在售SKU</div><div class="kpi-value">38</div><div class="kpi-sub">6个品类</div></div>
   </div>
 
-  <div class="chart-row">
-    <div class="chart-section"><h2>📈 每日GMV趋势</h2><canvas id="gmvChart"></canvas></div>
-    <div class="chart-section"><h2>📦 每日订单量</h2><canvas id="orderChart"></canvas></div>
+  <!-- 每日销售额 × 销量双轴图 -->
+  <div class="section">
+    <h2>每日销售额 × 销量趋势</h2>
+    <canvas id="dailyChart"></canvas>
   </div>
 
-  <div class="chart-section">
-    <h2>🏆 商品销售排行 TOP10</h2>
-    <canvas id="productChart" height="200"></canvas>
+  <!-- 品类销售对比 -->
+  <div class="section">
+    <h2>品类销售对比（国补 vs 非国补）</h2>
+    <canvas id="categoryChart" height="160"></canvas>
   </div>
 
-  <div class="chart-section">
-    <h2>📊 日环比波动分析</h2>
+  <!-- 品类明细卡片 -->
+  <div class="section">
+    <h2>品类明细（销售额 + 销量）</h2>
+    <div class="cat-grid" id="catGrid"></div>
+  </div>
+
+  <!-- 核心变化原因分析 -->
+  <div class="section">
+    <h2>核心变化原因分析</h2>
+    <div id="causeCards"></div>
+  </div>
+
+  <!-- 日环比明细 -->
+  <div class="section">
+    <h2>日环比明细</h2>
     <div class="table-wrap">
-      <table>
-        <thead><tr><th>日期</th><th>GMV</th><th>环比变化</th><th>变化率</th><th>订单量</th><th>订单变化</th><th>客单价</th></tr></thead>
-        <tbody><tr>
-          <td>2026-06-04</td>
-          <td>¥494,117</td>
-          <td class="positive">+¥403,626</td>
-          <td class="positive">+446%</td>
-          <td>122</td>
-          <td class="positive">+100</td>
-          <td>¥4,050</td>
-        </tr><tr>
-          <td>2026-06-05</td>
-          <td>¥462,943</td>
-          <td class="negative">¥-31,174</td>
-          <td class="negative">-6.3%</td>
-          <td>123</td>
-          <td class="positive">+1</td>
-          <td>¥3,764</td>
-        </tr><tr>
-          <td>2026-06-06</td>
-          <td>¥844,465</td>
-          <td class="positive">+¥381,522</td>
-          <td class="positive">+82.4%</td>
-          <td>235</td>
-          <td class="positive">+112</td>
-          <td>¥3,593</td>
-        </tr><tr>
-          <td>2026-06-07</td>
-          <td>¥874,167</td>
-          <td class="positive">+¥29,702</td>
-          <td class="positive">+3.5%</td>
-          <td>231</td>
-          <td class="negative">-4</td>
-          <td>¥3,784</td>
-        </tr><tr>
-          <td>2026-06-08</td>
-          <td>¥878,112</td>
-          <td class="positive">+¥3,945</td>
-          <td class="positive">+0.5%</td>
-          <td>223</td>
-          <td class="negative">-8</td>
-          <td>¥3,938</td>
-        </tr><tr>
-          <td>2026-06-09</td>
-          <td>¥168,377</td>
-          <td class="negative">¥-709,735</td>
-          <td class="negative">-80.8%</td>
-          <td>44</td>
-          <td class="negative">-179</td>
-          <td>¥3,827</td>
-        </tr></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="chart-section">
-    <h2>🔍 波动归因分析</h2>
-    <div class="attribution-card">
-      <h3>2026-06-04：GMV 上升 446%（+¥403,626）</h3>
-      
-      <p style="font-size:13px;color:#666;margin:12px 0 8px">⬆️ 主要增长商品：</p><div class="attr-items"><div class="attr-item"><b>粉丝福利【现货速发】夸克AI眼镜S1阿里旗舰拍照翻</b><br>变化: <span class="positive">+¥139,647</span></div><div class="attr-item"><b>粉丝福利【现货速发！国补】千问AI眼镜S1阿里旗舰</b><br>变化: <span class="positive">+¥67,779</span></div><div class="attr-item"><b>【S1近视配镜款】夸克AI眼镜S1阿里智能旗舰千问</b><br>变化: <span class="positive">+¥50,935</span></div><div class="attr-item"><b>【现货速发！】夸克AI眼镜S1阿里旗舰拍照翻译导航</b><br>变化: <span class="positive">+¥28,853</span></div><div class="attr-item"><b>【千问S1配镜款】千问AI眼镜S1阿里拍照翻译导航</b><br>变化: <span class="positive">+¥26,845</span></div></div>
-    </div><div class="attribution-card">
-      <h3>2026-06-06：GMV 上升 82.4%（+¥381,522）</h3>
-      
-      <p style="font-size:13px;color:#666;margin:12px 0 8px">⬆️ 主要增长商品：</p><div class="attr-items"><div class="attr-item"><b>【现货速发！】夸克AI眼镜S1阿里旗舰拍照翻译导航</b><br>变化: <span class="positive">+¥275,529</span></div><div class="attr-item"><b>【国补！S1近视配镜款】夸克AI眼镜S1阿里智能旗</b><br>变化: <span class="positive">+¥98,961</span></div><div class="attr-item"><b>粉丝福利【现货速发！国补】千问AI眼镜S1阿里旗舰</b><br>变化: <span class="positive">+¥43,858</span></div><div class="attr-item"><b>【现货速发！国补】千问AI眼镜G1半框方框蔡司防蓝</b><br>变化: <span class="positive">+¥26,245</span></div><div class="attr-item"><b>【千问S1配镜款】千问AI眼镜S1阿里拍照翻译导航</b><br>变化: <span class="positive">+¥17,008</span></div></div>
-    </div><div class="attribution-card">
-      <h3>2026-06-09：GMV 下降 80.8%（¥-709,735）</h3>
-      <p style="font-size:13px;color:#666;margin-bottom:8px">⬇️ 主要下降商品：</p><div class="attr-items"><div class="attr-item"><b>【现货速发！】夸克AI眼镜S1阿里旗舰拍照翻译导航</b><br>变化: <span class="negative">¥-170,582</span></div><div class="attr-item"><b>【国补现货速发】千问AI眼镜S1千问大模型阿里旗舰</b><br>变化: <span class="negative">¥-138,219</span></div><div class="attr-item"><b>【国补！S1近视配镜款】夸克AI眼镜S1阿里智能旗</b><br>变化: <span class="negative">¥-92,066</span></div><div class="attr-item"><b>【千问S1配镜款】千问AI眼镜S1阿里拍照翻译导航</b><br>变化: <span class="negative">¥-62,974</span></div><div class="attr-item"><b>【现货速发！国补】千问AI眼镜G1半框方框蔡司防蓝</b><br>变化: <span class="negative">¥-48,125</span></div></div>
-      
+      <table id="volatilityTable"></table>
     </div>
   </div>
 </div>
-
 <div class="footer">抖音小店数据BI看板 · 自动更新 · Powered by QoderWork</div>
 
 <script>
-const dailyTrend = [{"date":"2026-06-03","orderCount":22,"gmv":90490.69,"paidOrders":22,"refundCount":2,"avgOrderValue":4113,"productCount":44},{"date":"2026-06-04","orderCount":122,"gmv":494116.88999999996,"paidOrders":122,"refundCount":1,"avgOrderValue":4050,"productCount":238},{"date":"2026-06-05","orderCount":123,"gmv":462942.85999999987,"paidOrders":123,"refundCount":6,"avgOrderValue":3764,"productCount":235},{"date":"2026-06-06","orderCount":235,"gmv":844464.9499999998,"paidOrders":235,"refundCount":5,"avgOrderValue":3593,"productCount":450},{"date":"2026-06-07","orderCount":231,"gmv":874167.0499999996,"paidOrders":231,"refundCount":1,"avgOrderValue":3784,"productCount":433},{"date":"2026-06-08","orderCount":223,"gmv":878112.0099999997,"paidOrders":223,"refundCount":1,"avgOrderValue":3938,"productCount":377},{"date":"2026-06-09","orderCount":44,"gmv":168377.39999999997,"paidOrders":44,"refundCount":0,"avgOrderValue":3827,"productCount":68}];
-const productRanking = [{"productId":"3820211135483871259","productName":"【现货速发！】夸克AI眼镜S1阿里旗舰拍照翻译导航夸克智能眼镜","totalSales":1187610.8399999999,"totalQty":295,"orderCount":295,"dailySales":{"2026-06-09":{"sales":19945,"qty":5},"2026-06-08":{"sales":190527,"qty":46},"2026-06-07":{"sales":399094.83999999997,"qty":100},"2026-06-06":{"sales":412360,"qty":104},"2026-06-05":{"sales":136831,"qty":33},"2026-06-04":{"sales":28853,"qty":7}}},{"productId":"3821088887078518823","productName":"【国补！S1近视配镜款】夸克AI眼镜S1阿里智能旗舰千问拍照翻译导航","totalSales":606703.54,"totalQty":136,"orderCount":136,"dailySales":{"2026-06-09":{"sales":4698,"qty":1},"2026-06-08":{"sales":96764,"qty":21},"2026-06-07":{"sales":200858.38999999998,"qty":46},"2026-06-06":{"sales":181325.15000000002,"qty":43},"2026-06-05":{"sales":82364,"qty":17},"2026-06-04":{"sales":30718,"qty":6},"2026-06-03":{"sales":9976,"qty":2}}},{"productId":"3823894351185052125","productName":"【国补现货速发】千问AI眼镜S1千问大模型阿里旗舰翻译导航智能眼镜","totalSales":341204,"totalQty":78,"orderCount":78,"dailySales":{"2026-06-09":{"sales":74433,"qty":17},"2026-06-08":{"sales":212652,"qty":48},"2026-06-07":{"sales":41762,"qty":10},"2026-06-06":{"sales":7758,"qty":2},"2026-06-05":{"sales":4599,"qty":1}}},{"productId":"3786064682893312668","productName":"粉丝福利【现货速发】夸克AI眼镜S1阿里旗舰拍照翻译导航智能眼镜","totalSales":332986,"totalQty":80,"orderCount":80,"dailySales":{"2026-06-09":{"sales":4289,"qty":1},"2026-06-08":{"sales":12297,"qty":3},"2026-06-07":{"sales":8298,"qty":2},"2026-06-06":{"sales":8598,"qty":2},"2026-06-05":{"sales":62081,"qty":15},"2026-06-04":{"sales":188535,"qty":45},"2026-06-03":{"sales":48888,"qty":12}}},{"productId":"3810415090239406141","productName":"【现货速发！国补】千问AI眼镜G1半框方框蔡司防蓝光夸克智能眼镜","totalSales":214845.0799999999,"totalQty":95,"orderCount":95,"dailySales":{"2026-06-09":{"sales":15684.09,"qty":7},"2026-06-08":{"sales":63809.36999999998,"qty":28},"2026-06-07":{"sales":65545.62999999998,"qty":29},"2026-06-06":{"sales":44468.09999999999,"qty":20},"2026-06-05":{"sales":18223.39,"qty":8},"2026-06-04":{"sales":4953.01,"qty":2},"2026-06-03":{"sales":2161.49,"qty":1}}},{"productId":"3814083153396629588","productName":"粉丝福利【现货速发！国补】千问AI眼镜S1阿里旗舰拍照翻译导航眼镜","totalSales":200617,"totalQty":45,"orderCount":45,"dailySales":{"2026-06-09":{"sales":4299,"qty":1},"2026-06-08":{"sales":48789,"qty":11},"2026-06-07":{"sales":18096,"qty":4},"2026-06-06":{"sales":52756,"qty":12},"2026-06-05":{"sales":8898,"qty":2},"2026-06-04":{"sales":67779,"qty":15}}},{"productId":"3823732643443376321","productName":"【千问S1配镜款】千问AI眼镜S1阿里拍照翻译导航夸克智能眼镜定制镜","totalSales":180928,"totalQty":38,"orderCount":38,"dailySales":{"2026-06-09":{"sales":19232,"qty":4},"2026-06-08":{"sales":82206,"qty":17},"2026-06-07":{"sales":51858,"qty":11},"2026-06-06":{"sales":22320,"qty":5},"2026-06-05":{"sales":5312,"qty":1}}},{"productId":"3819990120745009551","productName":"【S1近视配镜款】夸克AI眼镜S1阿里智能旗舰千问拍照翻译导航送定制","totalSales":136609.18,"totalQty":27,"orderCount":27,"dailySales":{"2026-06-07":{"sales":4298,"qty":1},"2026-06-06":{"sales":20080.18,"qty":4},"2026-06-05":{"sales":30408,"qty":6},"2026-06-04":{"sales":66379,"qty":13},"2026-06-03":{"sales":15444,"qty":3}}},{"productId":"3820211423238291494","productName":"粉丝福利【现货速发】千问AI眼镜S1千问大模型阿里旗舰翻译导航眼镜","totalSales":126751,"totalQty":29,"orderCount":29,"dailySales":{"2026-06-09":{"sales":13447,"qty":3},"2026-06-08":{"sales":34392,"qty":8},"2026-06-07":{"sales":8898,"qty":2},"2026-06-06":{"sales":30423,"qty":7},"2026-06-05":{"sales":26694,"qty":6},"2026-06-04":{"sales":8598,"qty":2},"2026-06-03":{"sales":4299,"qty":1}}},{"productId":"3810408817397727452","productName":"粉丝福利【现货速发国补】夸克AI眼镜S1阿里旗舰拍照翻译导航眼镜","totalSales":93907,"totalQty":23,"orderCount":23,"dailySales":{"2026-06-08":{"sales":37191,"qty":9},"2026-06-07":{"sales":4299,"qty":1},"2026-06-06":{"sales":7998,"qty":2},"2026-06-05":{"sales":28123,"qty":7},"2026-06-04":{"sales":16296,"qty":4}}}];
+// === DATA ===
+const dailyTrend = [
+  {date:"2026-06-03",orderCount:22,gmv:90490.69,productCount:44,avgOrderValue:4113},
+  {date:"2026-06-04",orderCount:122,gmv:494116.89,productCount:238,avgOrderValue:4050},
+  {date:"2026-06-05",orderCount:123,gmv:462942.86,productCount:235,avgOrderValue:3764},
+  {date:"2026-06-06",orderCount:235,gmv:844464.95,productCount:450,avgOrderValue:3593},
+  {date:"2026-06-07",orderCount:231,gmv:874167.05,productCount:433,avgOrderValue:3784},
+  {date:"2026-06-08",orderCount:223,gmv:878112.01,productCount:377,avgOrderValue:3938},
+  {date:"2026-06-09",orderCount:44,gmv:168377.40,productCount:68,avgOrderValue:3827}
+];
 
-// GMV Chart
-new Chart(document.getElementById('gmvChart'), {
-  type: 'line',
+// 商品按品类+国补归类
+const products = [
+  {id:"3820211135483871259",cat:"夸克S1",subsidy:false,sales:1187611,qty:295,daily:{"06-03":{s:0,q:0},"06-04":{s:28853,q:7},"06-05":{s:136831,q:33},"06-06":{s:412360,q:104},"06-07":{s:399095,q:100},"06-08":{s:190527,q:46},"06-09":{s:19945,q:5}}},
+  {id:"3821088887078518823",cat:"夸克S1",subsidy:true,sales:606704,qty:136,daily:{"06-03":{s:9976,q:2},"06-04":{s:30718,q:6},"06-05":{s:82364,q:17},"06-06":{s:181325,q:43},"06-07":{s:200858,q:46},"06-08":{s:96764,q:21},"06-09":{s:4698,q:1}}},
+  {id:"3823894351185052125",cat:"千问S1",subsidy:true,sales:341204,qty:78,daily:{"06-05":{s:4599,q:1},"06-06":{s:7758,q:2},"06-07":{s:41762,q:10},"06-08":{s:212652,q:48},"06-09":{s:74433,q:17}}},
+  {id:"3786064682893312668",cat:"夸克S1",subsidy:false,sales:332986,qty:80,daily:{"06-03":{s:48888,q:12},"06-04":{s:188535,q:45},"06-05":{s:62081,q:15},"06-06":{s:8598,q:2},"06-07":{s:8298,q:2},"06-08":{s:12297,q:3},"06-09":{s:4289,q:1}}},
+  {id:"3810415090239406141",cat:"千问G1",subsidy:true,sales:214845,qty:95,daily:{"06-03":{s:2161,q:1},"06-04":{s:4953,q:2},"06-05":{s:18223,q:8},"06-06":{s:44468,q:20},"06-07":{s:65546,q:29},"06-08":{s:63809,q:28},"06-09":{s:15684,q:7}}},
+  {id:"3814083153396629588",cat:"千问S1",subsidy:true,sales:200617,qty:45,daily:{"06-04":{s:67779,q:15},"06-05":{s:8898,q:2},"06-06":{s:52756,q:12},"06-07":{s:18096,q:4},"06-08":{s:48789,q:11},"06-09":{s:4299,q:1}}},
+  {id:"3823732643443376321",cat:"千问S1",subsidy:false,sales:180928,qty:38,daily:{"06-05":{s:5312,q:1},"06-06":{s:22320,q:5},"06-07":{s:51858,q:11},"06-08":{s:82206,q:17},"06-09":{s:19232,q:4}}},
+  {id:"3819990120745009551",cat:"夸克S1",subsidy:false,sales:136609,qty:27,daily:{"06-03":{s:15444,q:3},"06-04":{s:66379,q:13},"06-05":{s:30408,q:6},"06-06":{s:20080,q:4},"06-07":{s:4298,q:1}}},
+  {id:"3820211423238291494",cat:"千问S1",subsidy:false,sales:126751,qty:29,daily:{"06-03":{s:4299,q:1},"06-04":{s:8598,q:2},"06-05":{s:26694,q:6},"06-06":{s:30423,q:7},"06-07":{s:8898,q:2},"06-08":{s:34392,q:8},"06-09":{s:13447,q:3}}},
+  {id:"3810408817397727452",cat:"夸克S1",subsidy:true,sales:93907,qty:23,daily:{"06-04":{s:16296,q:4},"06-05":{s:28123,q:7},"06-06":{s:7998,q:2},"06-07":{s:4299,q:1},"06-08":{s:37191,q:9}}},
+  {id:"3819860885221015620",cat:"千问S1",subsidy:false,sales:86918,qty:16,daily:{"06-04":{s:26845,q:5},"06-05":{s:5498,q:1},"06-07":{s:27255,q:5},"06-08":{s:27320,q:5}}},
+  {id:"3805346751846678672",cat:"千问G1",subsidy:false,sales:77977,qty:33,daily:{"06-03":{s:4524,q:2},"06-04":{s:27353,q:12},"06-05":{s:22562,q:10},"06-06":{s:4770,q:2},"06-07":{s:6096,q:2},"06-08":{s:12672,q:5}}},
+  {id:"3814267892866875768",cat:"千问G1",subsidy:false,sales:34058,qty:14,daily:{"06-04":{s:5291,q:2},"06-05":{s:7529,q:3},"06-06":{s:1951,q:1},"06-07":{s:7415,q:3},"06-08":{s:9340,q:4},"06-09":{s:2532,q:1}}},
+  {id:"3819599439664906650",cat:"千问G1",subsidy:true,sales:30016,qty:9,daily:{"06-05":{s:6724,q:2},"06-06":{s:20124,q:6},"06-07":{s:3168,q:1}}},
+  {id:"3810360892139372709",cat:"千问G1",subsidy:true,sales:28122,qty:13,daily:{"06-05":{s:2199,q:1},"06-06":{s:4348,q:2},"06-07":{s:6182,q:3},"06-08":{s:15393,q:7}}},
+  {id:"3801459297515340084",cat:"夸克S1",subsidy:false,sales:21637,qty:4,daily:{"06-04":{s:5743,q:1},"06-05":{s:5498,q:1},"06-07":{s:5198,q:1},"06-08":{s:5198,q:1}}},
+  {id:"3820210010135330849",cat:"千问S1",subsidy:false,sales:26994,qty:6,daily:{"06-04":{s:4599,q:1},"06-06":{s:4599,q:1},"06-07":{s:9198,q:2},"06-08":{s:8598,q:2}}}
+];
+
+// === 品类聚合 ===
+const categories = {};
+products.forEach(p => {
+  const key = p.cat + (p.subsidy ? '（国补）' : '（非国补）');
+  if (!categories[key]) categories[key] = { name: key, cat: p.cat, subsidy: p.subsidy, sales: 0, qty: 0, links: 0, dailySales: {}, dailyQty: {} };
+  categories[key].sales += p.sales;
+  categories[key].qty += p.qty;
+  categories[key].links++;
+  Object.entries(p.daily).forEach(([d, v]) => {
+    categories[key].dailySales[d] = (categories[key].dailySales[d] || 0) + v.s;
+    categories[key].dailyQty[d] = (categories[key].dailyQty[d] || 0) + v.q;
+  });
+});
+const catList = Object.values(categories).sort((a, b) => b.sales - a.sales);
+
+// === 核心变化原因分析 ===
+function analyzeCauses() {
+  const causes = [];
+  for (let i = 1; i < dailyTrend.length; i++) {
+    const today = dailyTrend[i];
+    const yest = dailyTrend[i-1];
+    const gmvChange = today.gmv - yest.gmv;
+    const gmvPct = yest.gmv > 0 ? (gmvChange / yest.gmv * 100) : 0;
+    if (Math.abs(gmvPct) < 15) continue;
+
+    const orderChange = today.orderCount - yest.orderCount;
+    const orderPct = yest.orderCount > 0 ? (orderChange / yest.orderCount * 100) : 0;
+    const aovChange = today.avgOrderValue - yest.avgOrderValue;
+    const aovPct = yest.avgOrderValue > 0 ? (aovChange / yest.avgOrderValue * 100) : 0;
+    const qtyChange = today.productCount - yest.productCount;
+    const qtyPct = yest.productCount > 0 ? (qtyChange / yest.productCount * 100) : 0;
+
+    // 核心判断：订单量变化（反映流量×转化率）vs 客单价变化（结构因素）
+    let mainCause = '';
+    let causeTag = '';
+    if (Math.abs(orderPct) > Math.abs(aovPct) * 2) {
+      mainCause = gmvChange > 0 
+        ? '订单量大幅增长 → 流量提升或转化率提高（订单+' + Math.round(orderPct) + '%，客单价仅' + (aovPct>=0?'+':'') + Math.round(aovPct) + '%）'
+        : '订单量大幅下降 → 流量减少或转化率降低（订单' + Math.round(orderPct) + '%，客单价' + (aovPct>=0?'+':'') + Math.round(aovPct) + '%）';
+      causeTag = 'traffic';
+    } else if (Math.abs(aovPct) > Math.abs(orderPct) * 2) {
+      mainCause = aovChange > 0 
+        ? '客单价提升 → 高价商品占比增加（客单价+' + Math.round(aovPct) + '%，订单量仅' + (orderPct>=0?'+':'') + Math.round(orderPct) + '%）'
+        : '客单价下降 → 低价商品/小件占比上升（客单价' + Math.round(aovPct) + '%，订单量' + (orderPct>=0?'+':'') + Math.round(orderPct) + '%）';
+      causeTag = 'aov';
+    } else {
+      mainCause = '订单量（' + (orderPct>=0?'+':'') + Math.round(orderPct) + '%）和客单价（' + (aovPct>=0?'+':'') + Math.round(aovPct) + '%）同步变化';
+      causeTag = 'conv';
+    }
+
+    // 品类变化归因
+    const catChanges = [];
+    const todayKey = today.date.substring(5);
+    const yestKey = yest.date.substring(5);
+    catList.forEach(c => {
+      const ts = c.dailySales[todayKey] || 0;
+      const ys = c.dailySales[yestKey] || 0;
+      const tq = c.dailyQty[todayKey] || 0;
+      const yq = c.dailyQty[yestKey] || 0;
+      if (ts !== ys || tq !== yq) {
+        catChanges.push({ name: c.name, salesChange: ts - ys, qtyChange: tq - yq });
+      }
+    });
+    catChanges.sort((a, b) => a.salesChange - b.salesChange);
+
+    causes.push({
+      date: today.date,
+      gmvPct: Math.round(gmvPct * 10) / 10,
+      gmvChange: Math.round(gmvChange),
+      orderPct: Math.round(orderPct * 10) / 10,
+      aovPct: Math.round(aovPct * 10) / 10,
+      qtyPct: Math.round(qtyPct * 10) / 10,
+      mainCause, causeTag,
+      topDecliners: catChanges.filter(c => c.salesChange < 0).slice(0, 5),
+      topGainers: catChanges.filter(c => c.salesChange > 0).sort((a,b) => b.salesChange - a.salesChange).slice(0, 5)
+    });
+  }
+  return causes;
+}
+
+const causes = analyzeCauses();
+
+// === RENDER: Daily Chart (Sales + Volume dual axis) ===
+new Chart(document.getElementById('dailyChart'), {
+  type: 'bar',
   data: {
     labels: dailyTrend.map(d => d.date.substring(5)),
     datasets: [{
-      label: 'GMV (万元)',
+      type: 'line',
+      label: '销售额 (万元)',
       data: dailyTrend.map(d => Math.round(d.gmv / 10000 * 10) / 10),
       borderColor: '#667eea',
-      backgroundColor: 'rgba(102,126,234,0.1)',
-      fill: true,
-      tension: 0.4,
-      pointRadius: 5,
-      pointBackgroundColor: '#667eea'
+      backgroundColor: 'rgba(102,126,234,0.08)',
+      fill: true, tension: 0.4, pointRadius: 6, pointBackgroundColor: '#667eea', borderWidth: 3,
+      yAxisID: 'y'
+    }, {
+      type: 'bar',
+      label: '销量 (件)',
+      data: dailyTrend.map(d => d.productCount),
+      backgroundColor: 'rgba(118,75,162,0.55)',
+      borderRadius: 6,
+      yAxisID: 'y1'
     }]
   },
-  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+  options: {
+    responsive: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: { legend: { position: 'top', labels: { usePointStyle: true, padding: 20 } } },
+    scales: {
+      y: { position: 'left', title: { display: true, text: '销售额 (万元)', color: '#667eea' }, beginAtZero: true },
+      y1: { position: 'right', title: { display: true, text: '销量 (件)', color: '#764ba2' }, beginAtZero: true, grid: { drawOnChartArea: false } }
+    }
+  }
 });
 
-// Order Chart
-new Chart(document.getElementById('orderChart'), {
+// === RENDER: Category Chart (国补 vs 非国补, Sales + Volume) ===
+const subsidyCats = catList.filter(c => c.subsidy);
+const nonSubsidyCats = catList.filter(c => !c.subsidy);
+const allCatNames = [...new Set(catList.map(c => c.cat))];
+new Chart(document.getElementById('categoryChart'), {
   type: 'bar',
   data: {
-    labels: dailyTrend.map(d => d.date.substring(5)),
+    labels: allCatNames,
     datasets: [{
-      label: '订单量',
-      data: dailyTrend.map(d => d.orderCount),
-      backgroundColor: 'rgba(118,75,162,0.7)',
-      borderRadius: 6
+      label: '国补-销售额(万)',
+      data: allCatNames.map(cn => { const c = subsidyCats.find(x => x.cat === cn); return c ? Math.round(c.sales/10000) : 0; }),
+      backgroundColor: 'rgba(102,126,234,0.7)', borderRadius: 4
+    }, {
+      label: '非国补-销售额(万)',
+      data: allCatNames.map(cn => { const c = nonSubsidyCats.find(x => x.cat === cn); return c ? Math.round(c.sales/10000) : 0; }),
+      backgroundColor: 'rgba(245,87,108,0.6)', borderRadius: 4
+    }, {
+      label: '国补-销量(件)',
+      data: allCatNames.map(cn => { const c = subsidyCats.find(x => x.cat === cn); return c ? c.qty : 0; }),
+      backgroundColor: 'rgba(102,126,234,0.3)', borderRadius: 4, yAxisID: 'y1'
+    }, {
+      label: '非国补-销量(件)',
+      data: allCatNames.map(cn => { const c = nonSubsidyCats.find(x => x.cat === cn); return c ? c.qty : 0; }),
+      backgroundColor: 'rgba(245,87,108,0.25)', borderRadius: 4, yAxisID: 'y1'
     }]
   },
-  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'top', labels: { usePointStyle: true, font: { size: 11 } } } },
+    scales: {
+      y: { position: 'left', title: { display: true, text: '销售额 (万元)' }, beginAtZero: true },
+      y1: { position: 'right', title: { display: true, text: '销量 (件)' }, beginAtZero: true, grid: { drawOnChartArea: false } }
+    }
+  }
 });
 
-// Product Chart
-new Chart(document.getElementById('productChart'), {
-  type: 'bar',
-  data: {
-    labels: productRanking.map(p => p.productName.substring(0, 20) + '...'),
-    datasets: [{
-      label: '销售额 (万元)',
-      data: productRanking.map(p => Math.round(p.totalSales / 10000 * 10) / 10),
-      backgroundColor: ['#667eea','#764ba2','#f093fb','#f5576c','#4facfe','#00f2fe','#43e97b','#fa709a','#fee140','#a18cd1'],
-      borderRadius: 6
-    }]
-  },
-  options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } } }
+// === RENDER: Category Detail Cards ===
+const catGridEl = document.getElementById('catGrid');
+catList.forEach(c => {
+  const card = document.createElement('div');
+  card.className = 'cat-card';
+  card.innerHTML = '<h4>' + c.name + ' <span style="font-size:11px;color:#999">(' + c.links + '个链接)</span></h4>' +
+    '<div class="cat-row"><span>总销售额</span><b>¥' + (c.sales/10000).toFixed(1) + '万</b></div>' +
+    '<div class="cat-row"><span>总销量</span><b>' + c.qty + '件</b></div>' +
+    '<div class="cat-row"><span>件均价</span><b>¥' + Math.round(c.sales/c.qty) + '</b></div>' +
+    '<div class="cat-row"><span>日均销售额</span><b>¥' + Math.round(c.sales/7).toLocaleString() + '</b></div>' +
+    '<div class="cat-row"><span>日均销量</span><b>' + (Math.round(c.qty/7*10)/10) + '件</b></div>';
+  catGridEl.appendChild(card);
 });
+
+// === RENDER: Cause Analysis ===
+const causeEl = document.getElementById('causeCards');
+causes.forEach(c => {
+  const isDown = c.gmvChange < 0;
+  const tagMap = { traffic: ['流量/转化', 'tag-traffic'], conv: ['复合因素', 'tag-conv'], aov: ['客单价', 'tag-aov'] };
+  const tagInfo = tagMap[c.causeTag];
+  const items = isDown ? c.topDecliners : c.topGainers;
+  let itemsHtml = items.map(it => 
+    '<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px dashed #eee">' +
+    '<span>' + it.name + '</span>' +
+    '<span class="' + (it.salesChange>=0?'positive':'negative') + '">销售额' + (it.salesChange>=0?'+':'') + '¥' + Math.round(Math.abs(it.salesChange)/10000*10)/10 + '万 ｜ 销量' + (it.qtyChange>=0?'+':'') + it.qtyChange + '件</span></div>'
+  ).join('');
+  
+  causeEl.innerHTML += '<div class="cause-card ' + (isDown ? 'danger' : '') + '">' +
+    '<h3>' + c.date + '：销售额' + (isDown?'下降':'上升') + ' ' + Math.abs(c.gmvPct) + '% <span class="cause-tag ' + tagInfo[1] + '">主因：' + tagInfo[0] + '</span></h3>' +
+    '<div class="cause-detail">' +
+    '<b>指标分解：</b>订单量 ' + (c.orderPct>=0?'+':'') + c.orderPct + '% ｜ 客单价 ' + (c.aovPct>=0?'+':'') + c.aovPct + '% ｜ 销量 ' + (c.qtyPct>=0?'+':'') + c.qtyPct + '%<br>' +
+    '<b>核心诊断：</b>' + c.mainCause +
+    '</div>' +
+    '<div style="margin-top:12px"><b>' + (isDown?'下降品类明细：':'增长品类明细：') + '</b></div>' +
+    '<div style="margin-top:6px">' + itemsHtml + '</div>' +
+    '</div>';
+});
+
+// === RENDER: Volatility Table ===
+const tbl = document.getElementById('volatilityTable');
+tbl.innerHTML = '<thead><tr><th>日期</th><th>销售额</th><th>环比</th><th>变化率</th><th>销量</th><th>销量环比</th><th>订单</th><th>客单价</th></tr></thead><tbody>' +
+  dailyTrend.slice(1).map((d, i) => {
+    const prev = dailyTrend[i];
+    const gmvC = d.gmv - prev.gmv;
+    const gmvP = prev.gmv > 0 ? (gmvC/prev.gmv*100) : 0;
+    const qtyC = d.productCount - prev.productCount;
+    return '<tr>' +
+      '<td>' + d.date + '</td>' +
+      '<td>¥' + Math.round(d.gmv).toLocaleString() + '</td>' +
+      '<td class="' + (gmvC>=0?'positive':'negative') + '">' + (gmvC>=0?'+':'') + '¥' + Math.round(gmvC).toLocaleString() + '</td>' +
+      '<td class="' + (gmvP>=0?'positive':'negative') + '">' + (gmvP>=0?'+':'') + (Math.round(gmvP*10)/10) + '%</td>' +
+      '<td>' + d.productCount + '件</td>' +
+      '<td class="' + (qtyC>=0?'positive':'negative') + '">' + (qtyC>=0?'+':'') + qtyC + '件</td>' +
+      '<td>' + d.orderCount + '单</td>' +
+      '<td>¥' + d.avgOrderValue.toLocaleString() + '</td>' +
+      '</tr>';
+  }).join('') + '</tbody>';
 </script>
 </body>
 </html>
