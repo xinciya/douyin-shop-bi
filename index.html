@@ -3,340 +3,362 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>抖音小店数据BI看板</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<title>千问官方旗舰店 - 电商罗盘BI看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'PingFang SC', sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; }
-.header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 32px 40px; box-shadow: 0 4px 20px rgba(102,126,234,0.3); }
-.header h1 { font-size: 28px; font-weight: 700; letter-spacing: 1px; }
-.header .subtitle { opacity: 0.85; margin-top: 8px; font-size: 14px; }
-.container { max-width: 1400px; margin: 0 auto; padding: 24px; }
-.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
-.kpi-card { background: white; border-radius: 16px; padding: 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s; }
-.kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
-.kpi-label { font-size: 12px; color: #8c8c8c; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-.kpi-value { font-size: 28px; font-weight: 700; margin: 6px 0 4px; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.kpi-sub { font-size: 11px; color: #bbb; }
-.section { background: white; border-radius: 16px; padding: 28px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-.section h2 { font-size: 17px; font-weight: 600; margin-bottom: 20px; color: #2d2d2d; }
-.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
-@media (max-width: 900px) { .chart-row { grid-template-columns: 1fr; } }
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th { background: #f8f9fc; padding: 10px 14px; text-align: left; font-weight: 600; color: #555; border-bottom: 2px solid #eee; white-space: nowrap; }
-td { padding: 9px 14px; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
-tr:hover td { background: #fafbff; }
-.positive { color: #10b981; font-weight: 600; }
-.negative { color: #ef4444; font-weight: 600; }
-.neutral { color: #6b7280; }
-.cause-card { background: #fafbff; border-radius: 12px; padding: 20px; margin-bottom: 16px; border-left: 4px solid #667eea; }
-.cause-card.warn { border-left-color: #f59e0b; }
-.cause-card.danger { border-left-color: #ef4444; }
-.cause-card h3 { font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.cause-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
-.tag-traffic { background: #fef3c7; color: #92400e; }
-.tag-conv { background: #dbeafe; color: #1e40af; }
-.tag-aov { background: #f3e8ff; color: #6b21a8; }
-.cause-detail { font-size: 13px; color: #555; line-height: 1.8; margin-top: 8px; }
-.cat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-.cat-card { background: #fafbff; border-radius: 12px; padding: 16px; border: 1px solid #e8ecf4; }
-.cat-card h4 { font-size: 14px; margin-bottom: 10px; color: #333; }
-.cat-card .cat-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; border-bottom: 1px dashed #eee; }
-.cat-card .cat-row:last-child { border-bottom: none; }
-.footer { text-align: center; padding: 20px; color: #999; font-size: 12px; }
+body { font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%); color: #e8e8e8; min-height: 100vh; }
+.header { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; }
+.header h1 { font-size: 22px; background: linear-gradient(90deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.header .meta { font-size: 13px; color: #8b8ba0; }
+.container { max-width: 1440px; margin: 0 auto; padding: 20px; }
+.section-title { font-size: 16px; font-weight: 600; margin: 24px 0 12px; padding-left: 12px; border-left: 3px solid #60a5fa; }
+.grid { display: grid; gap: 16px; }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; transition: all 0.3s; }
+.card:hover { border-color: rgba(96,165,250,0.3); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(96,165,250,0.1); }
+.kpi-label { font-size: 12px; color: #8b8ba0; margin-bottom: 4px; }
+.kpi-value { font-size: 28px; font-weight: 700; color: #fff; }
+.kpi-value.small { font-size: 20px; }
+.kpi-sub { font-size: 12px; margin-top: 6px; }
+.kpi-sub .up { color: #34d399; }
+.kpi-sub .down { color: #f87171; }
+.kpi-sub .neutral { color: #8b8ba0; }
+.chart-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; }
+.chart-title { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+.rank-badge { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #1e3a5f, #1a1a3e); border: 1px solid rgba(96,165,250,0.3); border-radius: 8px; padding: 8px 16px; }
+.rank-num { font-size: 24px; font-weight: 700; color: #60a5fa; }
+.rank-change { font-size: 12px; }
+.live-room { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.02); margin-bottom: 8px; }
+.live-dot { width: 8px; height: 8px; border-radius: 50%; background: #34d399; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+.live-room .name { flex: 1; font-size: 13px; }
+.live-room .gpm { font-size: 14px; font-weight: 600; color: #60a5fa; }
+.vol-item { padding: 12px; border-radius: 8px; background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.2); margin-bottom: 10px; }
+.vol-item.positive { background: rgba(52,211,153,0.05); border-color: rgba(52,211,153,0.2); }
+.vol-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.vol-factors { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; }
+.factor { padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); }
+.funnel { display: flex; align-items: center; gap: 8px; padding: 16px 0; }
+.funnel-step { flex: 1; text-align: center; padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.03); }
+.funnel-step .num { font-size: 18px; font-weight: 700; color: #fff; }
+.funnel-step .label { font-size: 11px; color: #8b8ba0; margin-top: 4px; }
+.funnel-arrow { color: #4b5563; font-size: 18px; }
+.funnel-rate { font-size: 11px; color: #a78bfa; text-align: center; }
+.exp-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.1); margin-top: 6px; overflow: hidden; }
+.exp-bar .fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+@media (max-width: 1024px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } .grid-3 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 <div class="header">
-  <h1>抖音小店数据BI看板</h1>
-  <div class="subtitle">数据周期：2026-06-03 至 2026-06-09 ｜ 更新时间：2026/6/9 11:35</div>
+  <h1>千问官方旗舰店 · 电商罗盘BI看板</h1>
+  <div class="meta">数据更新: 2026/6/9 16:41:07 | 店铺排名: 第28名 (↑6)</div>
 </div>
 <div class="container">
-  <!-- KPI -->
-  <div class="kpi-grid">
-    <div class="kpi-card"><div class="kpi-label">总销售额</div><div class="kpi-value">¥381.3万</div><div class="kpi-sub">日均 ¥54.5万</div></div>
-    <div class="kpi-card"><div class="kpi-label">总销量</div><div class="kpi-value">1,845件</div><div class="kpi-sub">日均 264 件</div></div>
-    <div class="kpi-card"><div class="kpi-label">总订单</div><div class="kpi-value">1,000单</div><div class="kpi-sub">件/单 = 1.85</div></div>
-    <div class="kpi-card"><div class="kpi-label">客单价</div><div class="kpi-value">¥3,813</div><div class="kpi-sub">件均价 ¥2,067</div></div>
-    <div class="kpi-card"><div class="kpi-label">在售SKU</div><div class="kpi-value">38</div><div class="kpi-sub">6个品类</div></div>
-  </div>
 
-  <!-- 每日销售额 × 销量双轴图 -->
-  <div class="section">
-    <h2>每日销售额 × 销量趋势</h2>
-    <canvas id="dailyChart"></canvas>
+<!-- KPI卡片 -->
+<div class="section-title">实时经营概况 (今日)</div>
+<div class="grid grid-4">
+  <div class="card">
+    <div class="kpi-label">成交金额 (GMV)</div>
+    <div class="kpi-value">¥229,754</div>
+    <div class="kpi-sub">昨日 ¥452,542 <span class="down">↓49.2%</span></div>
   </div>
-
-  <!-- 品类销售对比 -->
-  <div class="section">
-    <h2>品类销售对比（国补 vs 非国补）</h2>
-    <canvas id="categoryChart" height="160"></canvas>
+  <div class="card">
+    <div class="kpi-label">成交订单数</div>
+    <div class="kpi-value">106</div>
+    <div class="kpi-sub">昨日 197 <span class="down">↓46.2%</span></div>
   </div>
-
-  <!-- 品类明细卡片 -->
-  <div class="section">
-    <h2>品类明细（销售额 + 销量）</h2>
-    <div class="cat-grid" id="catGrid"></div>
+  <div class="card">
+    <div class="kpi-label">客单价</div>
+    <div class="kpi-value">¥4,095</div>
+    <div class="kpi-sub">昨日 ¥4345 <span class="down">↓5.7%</span></div>
   </div>
-
-  <!-- 核心变化原因分析 -->
-  <div class="section">
-    <h2>核心变化原因分析</h2>
-    <div id="causeCards"></div>
+  <div class="card">
+    <div class="kpi-label">成交人数</div>
+    <div class="kpi-value">56</div>
+    <div class="kpi-sub">昨日 104 <span class="down">↓46.2%</span></div>
   </div>
+</div>
 
-  <!-- 日环比明细 -->
-  <div class="section">
-    <h2>日环比明细</h2>
-    <div class="table-wrap">
-      <table id="volatilityTable"></table>
+<div class="grid grid-4" style="margin-top:12px">
+  <div class="card">
+    <div class="kpi-label">商品曝光人数</div>
+    <div class="kpi-value small">3.69万</div>
+    <div class="kpi-sub">昨日 9.71万 <span class="down">↓61.9%</span></div>
+  </div>
+  <div class="card">
+    <div class="kpi-label">商品点击人数</div>
+    <div class="kpi-value small">3,499</div>
+    <div class="kpi-sub">昨日 7,987 <span class="down">↓56.2%</span></div>
+  </div>
+  <div class="card">
+    <div class="kpi-label">退款金额</div>
+    <div class="kpi-value small">¥212,417</div>
+    <div class="kpi-sub">退款率 <span class="down">28.4%</span> (昨日 22.2%)</div>
+  </div>
+  <div class="card">
+    <div class="kpi-label">结算金额</div>
+    <div class="kpi-value small">¥164,536</div>
+    <div class="kpi-sub">昨日 ¥351,695 <span class="down">↓53.2%</span></div>
+  </div>
+</div>
+
+<!-- 流量转化漏斗 -->
+<div class="section-title">流量转化漏斗 (今日)</div>
+<div class="card">
+  <div class="funnel">
+    <div class="funnel-step"><div class="num">3.7万</div><div class="label">商品曝光人数</div></div>
+    <div><div class="funnel-arrow">→</div><div class="funnel-rate">9.5%</div></div>
+    <div class="funnel-step"><div class="num">3,499</div><div class="label">商品点击人数</div></div>
+    <div><div class="funnel-arrow">→</div><div class="funnel-rate">1.6%</div></div>
+    <div class="funnel-step"><div class="num">56</div><div class="label">成交人数</div></div>
+    <div><div class="funnel-arrow">→</div><div class="funnel-rate">¥4095</div></div>
+    <div class="funnel-step"><div class="num">¥23.0万</div><div class="label">成交金额</div></div>
+  </div>
+</div>
+
+<!-- 图表区 -->
+<div class="grid grid-2" style="margin-top:20px">
+  <div class="chart-card">
+    <div class="chart-title">今日GMV走势 vs 昨日</div>
+    <canvas id="hourlyChart" height="220"></canvas>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">近7天GMV趋势</div>
+    <canvas id="dailyChart" height="220"></canvas>
+  </div>
+</div>
+
+<div class="grid grid-2" style="margin-top:16px">
+  <div class="chart-card">
+    <div class="chart-title">近7天订单数 & 客单价</div>
+    <canvas id="ordersChart" height="220"></canvas>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">载体分布 & 店铺排名</div>
+    <div class="grid grid-2">
+      <canvas id="carrierChart" height="180"></canvas>
+      <div style="display:flex;flex-direction:column;gap:8px;justify-content:center">
+        <div class="rank-badge"><span style="font-size:12px;color:#8b8ba0">总排名</span><span class="rank-num">#28</span><span class="rank-change up">↑6</span></div>
+        <div class="rank-badge"><span style="font-size:12px;color:#8b8ba0">直播</span><span class="rank-num">#20</span></div>
+        <div class="rank-badge"><span style="font-size:12px;color:#8b8ba0">商品卡</span><span class="rank-num">#94</span></div>
+        <div class="rank-badge"><span style="font-size:12px;color:#8b8ba0">短视频</span><span class="rank-num">#208</span></div>
+      </div>
     </div>
   </div>
 </div>
-<div class="footer">抖音小店数据BI看板 · 自动更新 · Powered by QoderWork</div>
+
+<!-- 收支分析 -->
+<div class="section-title">收支分析 (近7天)</div>
+<div class="grid grid-3">
+  <div class="card">
+    <div class="kpi-label">成交金额</div>
+    <div class="kpi-value small">¥272.1万</div>
+  </div>
+  <div class="card">
+    <div class="kpi-label">投放消耗</div>
+    <div class="kpi-value small">¥54.8万</div>
+    <div class="kpi-sub neutral">费比 20.1%</div>
+  </div>
+  <div class="card">
+    <div class="kpi-label">结算金额</div>
+    <div class="kpi-value small">¥169.8万</div>
+    <div class="kpi-sub neutral">退款 ¥102.3万</div>
+  </div>
+</div>
+
+<!-- 转化率趋势 -->
+<div class="section-title">转化率趋势 (近7天)</div>
+<div class="chart-card">
+  <canvas id="conversionChart" height="200"></canvas>
+</div>
+
+<!-- 体验分 -->
+<div class="section-title">商家体验分</div>
+<div class="grid grid-4">
+  <div class="card">
+    <div class="kpi-label">综合体验分</div>
+    <div class="kpi-value">94</div>
+    <div class="exp-bar"><div class="fill" style="width:94%;background:linear-gradient(90deg,#34d399,#60a5fa)"></div></div>
+  </div>
+  <div class="card">
+    <div class="kpi-label">商品分</div>
+    <div class="kpi-value small">93</div>
+    <div class="exp-bar"><div class="fill" style="width:93%;background:#a78bfa"></div></div>
+  </div>
+  <div class="card">
+    <div class="kpi-label">服务分</div>
+    <div class="kpi-value small">94</div>
+    <div class="exp-bar"><div class="fill" style="width:94%;background:#60a5fa"></div></div>
+  </div>
+  <div class="card">
+    <div class="kpi-label">物流分</div>
+    <div class="kpi-value small">96</div>
+    <div class="exp-bar"><div class="fill" style="width:96%;background:#34d399"></div></div>
+  </div>
+</div>
+
+<!-- 实时直播间 -->
+<div class="section-title">实时直播间监控</div>
+<div class="card">
+  
+  <div class="live-room">
+    <div class="live-dot"></div>
+    <div class="name">千问官方旗舰店</div>
+    <div class="gpm">GPM ¥11,465</div>
+  </div>
+  <div class="live-room">
+    <div class="live-dot"></div>
+    <div class="name">千问眼镜官方旗舰店直播间</div>
+    <div class="gpm">GPM ¥24,854</div>
+  </div>
+  <div class="live-room">
+    <div class="live-dot"></div>
+    <div class="name">千问ai眼镜官方直播间</div>
+    <div class="gpm">GPM ¥20,278</div>
+  </div>
+  <div class="live-room">
+    <div class="live-dot"></div>
+    <div class="name">千问官方旗舰店直播间</div>
+    <div class="gpm">GPM ¥2,617</div>
+  </div>
+  <div class="live-room">
+    <div class="live-dot"></div>
+    <div class="name">千问AI眼镜官方直播</div>
+    <div class="gpm">GPM ¥0</div>
+  </div>
+</div>
+
+<!-- 波动归因 -->
+<div class="section-title">波动归因分析 (近7天)</div>
+
+<div class="vol-item positive">
+  <div class="vol-header">
+    <span>2026-06-06 GMV: ¥471,834</span>
+    <span class="up" style="font-weight:700">↑59.9%</span>
+  </div>
+  <div class="vol-factors">
+    <span class="factor">订单量 +56%</span>
+    <span class="factor">客单价 -3%</span>
+    <span class="factor">曝光 +642%</span>
+    <span class="factor">点击 +157%</span>
+    <span class="factor">点击转化 -40%</span>
+  </div>
+</div>
+
+</div>
 
 <script>
-// === DATA ===
-const dailyTrend = [
-  {date:"2026-06-03",orderCount:22,gmv:90490.69,productCount:44,avgOrderValue:4113},
-  {date:"2026-06-04",orderCount:122,gmv:494116.89,productCount:238,avgOrderValue:4050},
-  {date:"2026-06-05",orderCount:123,gmv:462942.86,productCount:235,avgOrderValue:3764},
-  {date:"2026-06-06",orderCount:235,gmv:844464.95,productCount:450,avgOrderValue:3593},
-  {date:"2026-06-07",orderCount:231,gmv:874167.05,productCount:433,avgOrderValue:3784},
-  {date:"2026-06-08",orderCount:223,gmv:878112.01,productCount:377,avgOrderValue:3938},
-  {date:"2026-06-09",orderCount:44,gmv:168377.40,productCount:68,avgOrderValue:3827}
-];
+Chart.defaults.color = '#8b8ba0';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
 
-// 商品按品类+国补归类
-const products = [
-  {id:"3820211135483871259",cat:"夸克S1",subsidy:false,sales:1187611,qty:295,daily:{"06-03":{s:0,q:0},"06-04":{s:28853,q:7},"06-05":{s:136831,q:33},"06-06":{s:412360,q:104},"06-07":{s:399095,q:100},"06-08":{s:190527,q:46},"06-09":{s:19945,q:5}}},
-  {id:"3821088887078518823",cat:"夸克S1",subsidy:true,sales:606704,qty:136,daily:{"06-03":{s:9976,q:2},"06-04":{s:30718,q:6},"06-05":{s:82364,q:17},"06-06":{s:181325,q:43},"06-07":{s:200858,q:46},"06-08":{s:96764,q:21},"06-09":{s:4698,q:1}}},
-  {id:"3823894351185052125",cat:"千问S1",subsidy:true,sales:341204,qty:78,daily:{"06-05":{s:4599,q:1},"06-06":{s:7758,q:2},"06-07":{s:41762,q:10},"06-08":{s:212652,q:48},"06-09":{s:74433,q:17}}},
-  {id:"3786064682893312668",cat:"夸克S1",subsidy:false,sales:332986,qty:80,daily:{"06-03":{s:48888,q:12},"06-04":{s:188535,q:45},"06-05":{s:62081,q:15},"06-06":{s:8598,q:2},"06-07":{s:8298,q:2},"06-08":{s:12297,q:3},"06-09":{s:4289,q:1}}},
-  {id:"3810415090239406141",cat:"千问G1",subsidy:true,sales:214845,qty:95,daily:{"06-03":{s:2161,q:1},"06-04":{s:4953,q:2},"06-05":{s:18223,q:8},"06-06":{s:44468,q:20},"06-07":{s:65546,q:29},"06-08":{s:63809,q:28},"06-09":{s:15684,q:7}}},
-  {id:"3814083153396629588",cat:"千问S1",subsidy:true,sales:200617,qty:45,daily:{"06-04":{s:67779,q:15},"06-05":{s:8898,q:2},"06-06":{s:52756,q:12},"06-07":{s:18096,q:4},"06-08":{s:48789,q:11},"06-09":{s:4299,q:1}}},
-  {id:"3823732643443376321",cat:"千问S1",subsidy:false,sales:180928,qty:38,daily:{"06-05":{s:5312,q:1},"06-06":{s:22320,q:5},"06-07":{s:51858,q:11},"06-08":{s:82206,q:17},"06-09":{s:19232,q:4}}},
-  {id:"3819990120745009551",cat:"夸克S1",subsidy:false,sales:136609,qty:27,daily:{"06-03":{s:15444,q:3},"06-04":{s:66379,q:13},"06-05":{s:30408,q:6},"06-06":{s:20080,q:4},"06-07":{s:4298,q:1}}},
-  {id:"3820211423238291494",cat:"千问S1",subsidy:false,sales:126751,qty:29,daily:{"06-03":{s:4299,q:1},"06-04":{s:8598,q:2},"06-05":{s:26694,q:6},"06-06":{s:30423,q:7},"06-07":{s:8898,q:2},"06-08":{s:34392,q:8},"06-09":{s:13447,q:3}}},
-  {id:"3810408817397727452",cat:"夸克S1",subsidy:true,sales:93907,qty:23,daily:{"06-04":{s:16296,q:4},"06-05":{s:28123,q:7},"06-06":{s:7998,q:2},"06-07":{s:4299,q:1},"06-08":{s:37191,q:9}}},
-  {id:"3819860885221015620",cat:"千问S1",subsidy:false,sales:86918,qty:16,daily:{"06-04":{s:26845,q:5},"06-05":{s:5498,q:1},"06-07":{s:27255,q:5},"06-08":{s:27320,q:5}}},
-  {id:"3805346751846678672",cat:"千问G1",subsidy:false,sales:77977,qty:33,daily:{"06-03":{s:4524,q:2},"06-04":{s:27353,q:12},"06-05":{s:22562,q:10},"06-06":{s:4770,q:2},"06-07":{s:6096,q:2},"06-08":{s:12672,q:5}}},
-  {id:"3814267892866875768",cat:"千问G1",subsidy:false,sales:34058,qty:14,daily:{"06-04":{s:5291,q:2},"06-05":{s:7529,q:3},"06-06":{s:1951,q:1},"06-07":{s:7415,q:3},"06-08":{s:9340,q:4},"06-09":{s:2532,q:1}}},
-  {id:"3819599439664906650",cat:"千问G1",subsidy:true,sales:30016,qty:9,daily:{"06-05":{s:6724,q:2},"06-06":{s:20124,q:6},"06-07":{s:3168,q:1}}},
-  {id:"3810360892139372709",cat:"千问G1",subsidy:true,sales:28122,qty:13,daily:{"06-05":{s:2199,q:1},"06-06":{s:4348,q:2},"06-07":{s:6182,q:3},"06-08":{s:15393,q:7}}},
-  {id:"3801459297515340084",cat:"夸克S1",subsidy:false,sales:21637,qty:4,daily:{"06-04":{s:5743,q:1},"06-05":{s:5498,q:1},"06-07":{s:5198,q:1},"06-08":{s:5198,q:1}}},
-  {id:"3820210010135330849",cat:"千问S1",subsidy:false,sales:26994,qty:6,daily:{"06-04":{s:4599,q:1},"06-06":{s:4599,q:1},"06-07":{s:9198,q:2},"06-08":{s:8598,q:2}}}
-];
-
-// === 品类聚合 ===
-const categories = {};
-products.forEach(p => {
-  const key = p.cat + (p.subsidy ? '（国补）' : '（非国补）');
-  if (!categories[key]) categories[key] = { name: key, cat: p.cat, subsidy: p.subsidy, sales: 0, qty: 0, links: 0, dailySales: {}, dailyQty: {} };
-  categories[key].sales += p.sales;
-  categories[key].qty += p.qty;
-  categories[key].links++;
-  Object.entries(p.daily).forEach(([d, v]) => {
-    categories[key].dailySales[d] = (categories[key].dailySales[d] || 0) + v.s;
-    categories[key].dailyQty[d] = (categories[key].dailyQty[d] || 0) + v.q;
-  });
+// 今日vs昨日小时趋势
+new Chart(document.getElementById('hourlyChart'), {
+  type: 'line',
+  data: {
+    labels: ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00"],
+    datasets: [{
+      label: '今日',
+      data: ["0","4591","8590","19749","24048","24048","24048","24048","37335","46233","57723","90797","122456","155650","180119","209735","229754"],
+      borderColor: '#60a5fa',
+      backgroundColor: 'rgba(96,165,250,0.1)',
+      fill: true,
+      tension: 0.3,
+      pointRadius: 0
+    }, {
+      label: '昨日',
+      data: ["0","26331","33529","38128","41211","45429","49728","54027","67224","91056","150583","179054","193056","216057","230918","250013","297302","315097","330456","345443","372256","388715","415547","424411"],
+      borderColor: '#6b7280',
+      borderDash: [5,5],
+      tension: 0.3,
+      pointRadius: 0
+    }]
+  },
+  options: { plugins: { legend: { position: 'top' } }, scales: { y: { ticks: { callback: v => '¥' + (v/10000).toFixed(1) + '万' } } } }
 });
-const catList = Object.values(categories).sort((a, b) => b.sales - a.sales);
 
-// === 核心变化原因分析 ===
-function analyzeCauses() {
-  const causes = [];
-  for (let i = 1; i < dailyTrend.length; i++) {
-    const today = dailyTrend[i];
-    const yest = dailyTrend[i-1];
-    const gmvChange = today.gmv - yest.gmv;
-    const gmvPct = yest.gmv > 0 ? (gmvChange / yest.gmv * 100) : 0;
-    if (Math.abs(gmvPct) < 15) continue;
-
-    const orderChange = today.orderCount - yest.orderCount;
-    const orderPct = yest.orderCount > 0 ? (orderChange / yest.orderCount * 100) : 0;
-    const aovChange = today.avgOrderValue - yest.avgOrderValue;
-    const aovPct = yest.avgOrderValue > 0 ? (aovChange / yest.avgOrderValue * 100) : 0;
-    const qtyChange = today.productCount - yest.productCount;
-    const qtyPct = yest.productCount > 0 ? (qtyChange / yest.productCount * 100) : 0;
-
-    // 核心判断：订单量变化（反映流量×转化率）vs 客单价变化（结构因素）
-    let mainCause = '';
-    let causeTag = '';
-    if (Math.abs(orderPct) > Math.abs(aovPct) * 2) {
-      mainCause = gmvChange > 0 
-        ? '订单量大幅增长 → 流量提升或转化率提高（订单+' + Math.round(orderPct) + '%，客单价仅' + (aovPct>=0?'+':'') + Math.round(aovPct) + '%）'
-        : '订单量大幅下降 → 流量减少或转化率降低（订单' + Math.round(orderPct) + '%，客单价' + (aovPct>=0?'+':'') + Math.round(aovPct) + '%）';
-      causeTag = 'traffic';
-    } else if (Math.abs(aovPct) > Math.abs(orderPct) * 2) {
-      mainCause = aovChange > 0 
-        ? '客单价提升 → 高价商品占比增加（客单价+' + Math.round(aovPct) + '%，订单量仅' + (orderPct>=0?'+':'') + Math.round(orderPct) + '%）'
-        : '客单价下降 → 低价商品/小件占比上升（客单价' + Math.round(aovPct) + '%，订单量' + (orderPct>=0?'+':'') + Math.round(orderPct) + '%）';
-      causeTag = 'aov';
-    } else {
-      mainCause = '订单量（' + (orderPct>=0?'+':'') + Math.round(orderPct) + '%）和客单价（' + (aovPct>=0?'+':'') + Math.round(aovPct) + '%）同步变化';
-      causeTag = 'conv';
-    }
-
-    // 品类变化归因
-    const catChanges = [];
-    const todayKey = today.date.substring(5);
-    const yestKey = yest.date.substring(5);
-    catList.forEach(c => {
-      const ts = c.dailySales[todayKey] || 0;
-      const ys = c.dailySales[yestKey] || 0;
-      const tq = c.dailyQty[todayKey] || 0;
-      const yq = c.dailyQty[yestKey] || 0;
-      if (ts !== ys || tq !== yq) {
-        catChanges.push({ name: c.name, salesChange: ts - ys, qtyChange: tq - yq });
-      }
-    });
-    catChanges.sort((a, b) => a.salesChange - b.salesChange);
-
-    causes.push({
-      date: today.date,
-      gmvPct: Math.round(gmvPct * 10) / 10,
-      gmvChange: Math.round(gmvChange),
-      orderPct: Math.round(orderPct * 10) / 10,
-      aovPct: Math.round(aovPct * 10) / 10,
-      qtyPct: Math.round(qtyPct * 10) / 10,
-      mainCause, causeTag,
-      topDecliners: catChanges.filter(c => c.salesChange < 0).slice(0, 5),
-      topGainers: catChanges.filter(c => c.salesChange > 0).sort((a,b) => b.salesChange - a.salesChange).slice(0, 5)
-    });
-  }
-  return causes;
-}
-
-const causes = analyzeCauses();
-
-// === RENDER: Daily Chart (Sales + Volume dual axis) ===
+// 近7天GMV
 new Chart(document.getElementById('dailyChart'), {
   type: 'bar',
   data: {
-    labels: dailyTrend.map(d => d.date.substring(5)),
+    labels: ["06-02","06-03","06-04","06-05","06-06","06-07","06-08"],
     datasets: [{
-      type: 'line',
-      label: '销售额 (万元)',
-      data: dailyTrend.map(d => Math.round(d.gmv / 10000 * 10) / 10),
-      borderColor: '#667eea',
-      backgroundColor: 'rgba(102,126,234,0.08)',
-      fill: true, tension: 0.4, pointRadius: 6, pointBackgroundColor: '#667eea', borderWidth: 3,
+      label: 'GMV (万元)',
+      data: ["35.76","35.98","31.10","29.51","47.18","47.29","45.25"],
+      backgroundColor: ["rgba(96,165,250,0.7)","rgba(96,165,250,0.7)","rgba(96,165,250,0.7)","rgba(96,165,250,0.7)","rgba(52,211,153,0.7)","rgba(96,165,250,0.7)","rgba(96,165,250,0.7)"],
+      borderRadius: 6
+    }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+
+// 订单数 + 客单价
+new Chart(document.getElementById('ordersChart'), {
+  type: 'bar',
+  data: {
+    labels: ["06-02","06-03","06-04","06-05","06-06","06-07","06-08"],
+    datasets: [{
+      label: '订单数',
+      data: [185,189,155,155,242,233,197],
+      backgroundColor: 'rgba(167,139,250,0.6)',
+      borderRadius: 4,
       yAxisID: 'y'
     }, {
-      type: 'bar',
-      label: '销量 (件)',
-      data: dailyTrend.map(d => d.productCount),
-      backgroundColor: 'rgba(118,75,162,0.55)',
-      borderRadius: 6,
+      label: '客单价',
+      data: ["3967","4039","4259","3921","3810","3972","4345"],
+      type: 'line',
+      borderColor: '#fbbf24',
+      tension: 0.3,
+      pointRadius: 3,
       yAxisID: 'y1'
     }]
   },
-  options: {
-    responsive: true,
-    interaction: { mode: 'index', intersect: false },
-    plugins: { legend: { position: 'top', labels: { usePointStyle: true, padding: 20 } } },
-    scales: {
-      y: { position: 'left', title: { display: true, text: '销售额 (万元)', color: '#667eea' }, beginAtZero: true },
-      y1: { position: 'right', title: { display: true, text: '销量 (件)', color: '#764ba2' }, beginAtZero: true, grid: { drawOnChartArea: false } }
-    }
-  }
+  options: { plugins: { legend: { position: 'top' } }, scales: { y: { position: 'left', beginAtZero: true }, y1: { position: 'right', grid: { drawOnChartArea: false } } } }
 });
 
-// === RENDER: Category Chart (国补 vs 非国补, Sales + Volume) ===
-const subsidyCats = catList.filter(c => c.subsidy);
-const nonSubsidyCats = catList.filter(c => !c.subsidy);
-const allCatNames = [...new Set(catList.map(c => c.cat))];
-new Chart(document.getElementById('categoryChart'), {
-  type: 'bar',
+// 载体饼图
+new Chart(document.getElementById('carrierChart'), {
+  type: 'doughnut',
   data: {
-    labels: allCatNames,
+    labels: ['直播', '商品卡', '其他'],
+    datasets: [{ data: [222429, 7325, 0], backgroundColor: ['#60a5fa', '#34d399', '#6b7280'], borderWidth: 0 }]
+  },
+  options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }, cutout: '60%' }
+});
+
+// 转化率趋势
+new Chart(document.getElementById('conversionChart'), {
+  type: 'line',
+  data: {
+    labels: ["06-02","06-03","06-04","06-05","06-06","06-07","06-08"],
     datasets: [{
-      label: '国补-销售额(万)',
-      data: allCatNames.map(cn => { const c = subsidyCats.find(x => x.cat === cn); return c ? Math.round(c.sales/10000) : 0; }),
-      backgroundColor: 'rgba(102,126,234,0.7)', borderRadius: 4
+      label: '曝光→点击率',
+      data: ["6.68","6.47","2.62","3.79","1.31","8.89","8.23"],
+      borderColor: '#60a5fa',
+      tension: 0.3,
+      yAxisID: 'y'
     }, {
-      label: '非国补-销售额(万)',
-      data: allCatNames.map(cn => { const c = nonSubsidyCats.find(x => x.cat === cn); return c ? Math.round(c.sales/10000) : 0; }),
-      backgroundColor: 'rgba(245,87,108,0.6)', borderRadius: 4
+      label: '点击→成交率',
+      data: ["2.05","1.59","0.19","1.00","0.60","1.22","1.30"],
+      borderColor: '#34d399',
+      tension: 0.3,
+      yAxisID: 'y'
     }, {
-      label: '国补-销量(件)',
-      data: allCatNames.map(cn => { const c = subsidyCats.find(x => x.cat === cn); return c ? c.qty : 0; }),
-      backgroundColor: 'rgba(102,126,234,0.3)', borderRadius: 4, yAxisID: 'y1'
-    }, {
-      label: '非国补-销量(件)',
-      data: allCatNames.map(cn => { const c = nonSubsidyCats.find(x => x.cat === cn); return c ? c.qty : 0; }),
-      backgroundColor: 'rgba(245,87,108,0.25)', borderRadius: 4, yAxisID: 'y1'
+      label: '退款率',
+      data: ["45.24","44.23","37.95","44.81","38.52","35.72","22.21"],
+      borderColor: '#f87171',
+      borderDash: [5,3],
+      tension: 0.3,
+      yAxisID: 'y'
     }]
   },
-  options: {
-    responsive: true,
-    plugins: { legend: { position: 'top', labels: { usePointStyle: true, font: { size: 11 } } } },
-    scales: {
-      y: { position: 'left', title: { display: true, text: '销售额 (万元)' }, beginAtZero: true },
-      y1: { position: 'right', title: { display: true, text: '销量 (件)' }, beginAtZero: true, grid: { drawOnChartArea: false } }
-    }
-  }
+  options: { plugins: { legend: { position: 'top' } }, scales: { y: { ticks: { callback: v => v + '%' } } } }
 });
-
-// === RENDER: Category Detail Cards ===
-const catGridEl = document.getElementById('catGrid');
-catList.forEach(c => {
-  const card = document.createElement('div');
-  card.className = 'cat-card';
-  card.innerHTML = '<h4>' + c.name + ' <span style="font-size:11px;color:#999">(' + c.links + '个链接)</span></h4>' +
-    '<div class="cat-row"><span>总销售额</span><b>¥' + (c.sales/10000).toFixed(1) + '万</b></div>' +
-    '<div class="cat-row"><span>总销量</span><b>' + c.qty + '件</b></div>' +
-    '<div class="cat-row"><span>件均价</span><b>¥' + Math.round(c.sales/c.qty) + '</b></div>' +
-    '<div class="cat-row"><span>日均销售额</span><b>¥' + Math.round(c.sales/7).toLocaleString() + '</b></div>' +
-    '<div class="cat-row"><span>日均销量</span><b>' + (Math.round(c.qty/7*10)/10) + '件</b></div>';
-  catGridEl.appendChild(card);
-});
-
-// === RENDER: Cause Analysis ===
-const causeEl = document.getElementById('causeCards');
-causes.forEach(c => {
-  const isDown = c.gmvChange < 0;
-  const tagMap = { traffic: ['流量/转化', 'tag-traffic'], conv: ['复合因素', 'tag-conv'], aov: ['客单价', 'tag-aov'] };
-  const tagInfo = tagMap[c.causeTag];
-  const items = isDown ? c.topDecliners : c.topGainers;
-  let itemsHtml = items.map(it => 
-    '<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px dashed #eee">' +
-    '<span>' + it.name + '</span>' +
-    '<span class="' + (it.salesChange>=0?'positive':'negative') + '">销售额' + (it.salesChange>=0?'+':'') + '¥' + Math.round(Math.abs(it.salesChange)/10000*10)/10 + '万 ｜ 销量' + (it.qtyChange>=0?'+':'') + it.qtyChange + '件</span></div>'
-  ).join('');
-  
-  causeEl.innerHTML += '<div class="cause-card ' + (isDown ? 'danger' : '') + '">' +
-    '<h3>' + c.date + '：销售额' + (isDown?'下降':'上升') + ' ' + Math.abs(c.gmvPct) + '% <span class="cause-tag ' + tagInfo[1] + '">主因：' + tagInfo[0] + '</span></h3>' +
-    '<div class="cause-detail">' +
-    '<b>指标分解：</b>订单量 ' + (c.orderPct>=0?'+':'') + c.orderPct + '% ｜ 客单价 ' + (c.aovPct>=0?'+':'') + c.aovPct + '% ｜ 销量 ' + (c.qtyPct>=0?'+':'') + c.qtyPct + '%<br>' +
-    '<b>核心诊断：</b>' + c.mainCause +
-    '</div>' +
-    '<div style="margin-top:12px"><b>' + (isDown?'下降品类明细：':'增长品类明细：') + '</b></div>' +
-    '<div style="margin-top:6px">' + itemsHtml + '</div>' +
-    '</div>';
-});
-
-// === RENDER: Volatility Table ===
-const tbl = document.getElementById('volatilityTable');
-tbl.innerHTML = '<thead><tr><th>日期</th><th>销售额</th><th>环比</th><th>变化率</th><th>销量</th><th>销量环比</th><th>订单</th><th>客单价</th></tr></thead><tbody>' +
-  dailyTrend.slice(1).map((d, i) => {
-    const prev = dailyTrend[i];
-    const gmvC = d.gmv - prev.gmv;
-    const gmvP = prev.gmv > 0 ? (gmvC/prev.gmv*100) : 0;
-    const qtyC = d.productCount - prev.productCount;
-    return '<tr>' +
-      '<td>' + d.date + '</td>' +
-      '<td>¥' + Math.round(d.gmv).toLocaleString() + '</td>' +
-      '<td class="' + (gmvC>=0?'positive':'negative') + '">' + (gmvC>=0?'+':'') + '¥' + Math.round(gmvC).toLocaleString() + '</td>' +
-      '<td class="' + (gmvP>=0?'positive':'negative') + '">' + (gmvP>=0?'+':'') + (Math.round(gmvP*10)/10) + '%</td>' +
-      '<td>' + d.productCount + '件</td>' +
-      '<td class="' + (qtyC>=0?'positive':'negative') + '">' + (qtyC>=0?'+':'') + qtyC + '件</td>' +
-      '<td>' + d.orderCount + '单</td>' +
-      '<td>¥' + d.avgOrderValue.toLocaleString() + '</td>' +
-      '</tr>';
-  }).join('') + '</tbody>';
 </script>
 </body>
 </html>
