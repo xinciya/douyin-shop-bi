@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抖音小店数据BI看板</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f0f2f5;
+            color: #1a1a2e;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 32px 40px;
+            color: white;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .header .subtitle {
+            font-size: 14px;
+            opacity: 0.85;
+            margin-top: 6px;
+            font-weight: 400;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 32px 48px;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .kpi-card .kpi-label {
+            font-size: 13px;
+            color: #8c8c8c;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .kpi-card .kpi-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .kpi-card .kpi-unit {
+            font-size: 14px;
+            color: #8c8c8c;
+            font-weight: 400;
+            margin-left: 4px;
+        }
+
+        .kpi-card .kpi-sub {
+            font-size: 12px;
+            color: #a0a0a0;
+            margin-top: 6px;
+        }
+
+        .kpi-card:nth-child(1) { border-top: 3px solid #667eea; }
+        .kpi-card:nth-child(2) { border-top: 3px solid #764ba2; }
+        .kpi-card:nth-child(3) { border-top: 3px solid #f093fb; }
+        .kpi-card:nth-child(4) { border-top: 3px solid #4facfe; }
+
+        /* Chart Section */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .chart-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .chart-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        .chart-wrapper.tall {
+            height: 420px;
+        }
+
+        /* Volatility Table */
+        .volatility-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: 28px;
+        }
+
+        .volatility-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .data-table th {
+            background: #f8f9fc;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #555;
+            border-bottom: 2px solid #e8e8e8;
+        }
+
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .data-table tr:hover td {
+            background: #fafbff;
+        }
+
+        .change-positive {
+            color: #52c41a;
+            font-weight: 600;
+        }
+
+        .change-negative {
+            color: #ff4d4f;
+            font-weight: 600;
+        }
+
+        .change-neutral {
+            color: #8c8c8c;
+        }
+
+        /* Attribution Section */
+        .attribution-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: 28px;
+        }
+
+        .attribution-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 6px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .attribution-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .attribution-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-decline {
+            background: #fff1f0;
+            color: #ff4d4f;
+        }
+
+        .badge-gain {
+            background: #f6ffed;
+            color: #52c41a;
+        }
+
+        .attribution-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .attribution-column h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .attribution-item {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #f0f0f0;
+            transition: background 0.15s;
+        }
+
+        .attribution-item:hover {
+            background: #fafbff;
+        }
+
+        .attribution-item .product-name {
+            font-size: 13px;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .attribution-item .product-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .attribution-item .product-change {
+            font-weight: 600;
+        }
+
+        .decline-item .product-change { color: #ff4d4f; }
+        .gain-item .product-change { color: #52c41a; }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #bbb;
+            font-size: 12px;
+        }
+
+        @media (max-width: 1024px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+            .attribution-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>抖音小店数据BI看板</h1>
+        <div class="subtitle">数据周期：2026-06-03 至 2026-06-09 | 共 7 天</div>
+    </div>
+
+    <div class="container">
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">总 GMV</div>
+                <div class="kpi-value">381.39<span class="kpi-unit">万元</span></div>
+                <div class="kpi-sub">日均 GMV ¥544,842</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">总订单数</div>
+                <div class="kpi-value">1,000<span class="kpi-unit">单</span></div>
+                <div class="kpi-sub">日均 143 单</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">客单价</div>
+                <div class="kpi-value">3,814<span class="kpi-unit">元</span></div>
+                <div class="kpi-sub">周期内平均</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">在售商品数</div>
+                <div class="kpi-value">38<span class="kpi-unit">款</span></div>
+                <div class="kpi-sub">有成交记录商品</div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="chart-grid">
+            <div class="chart-card">
+                <h3>GMV 日趋势</h3>
+                <div class="chart-wrapper">
+                    <canvas id="gmvChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>订单量日趋势</h3>
+                <div class="chart-wrapper">
+                    <canvas id="orderChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card full-width">
+                <h3>商品销售额 TOP 10 排行</h3>
+                <div class="chart-wrapper tall">
+                    <canvas id="rankingChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Volatility Section -->
+        <div class="volatility-section">
+            <h3>日环比波动分析</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>GMV (元)</th>
+                        <th>环比变化</th>
+                        <th>环比幅度</th>
+                        <th>订单数</th>
+                        <th>订单环比</th>
+                        <th>客单价 (元)</th>
+                    </tr>
+                </thead>
+                <tbody id="volatilityBody">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Attribution Section -->
+        <div class="attribution-section">
+            <h3>GMV 变动归因分析</h3>
+            <div class="attribution-header">
+                <span class="attribution-badge badge-decline">2026-06-09 GMV 环比下降 86.7%</span>
+            </div>
+            <div class="attribution-grid">
+                <div class="attribution-column">
+                    <h4><span style="color:#ff4d4f;">&#9660;</span> 下滑商品 TOP 5</h4>
+                    <div id="declinersContainer"></div>
+                </div>
+                <div class="attribution-column">
+                    <h4><span style="color:#52c41a;">&#9650;</span> 增长商品 TOP 3</h4>
+                    <div id="gainersContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        抖音小店数据BI看板 &mdash; 数据自动生成
+    </div>
+
+    <script>
+    // Embedded data
+    const biData = {"summary":{"period":{"start":"2026-06-03","end":"2026-06-09"},"totalGMV":3813896,"totalOrders":1000,"avgDailyGMV":544842,"avgOrderValue":3814,"daysCount":7,"productCount":38},"dailyTrend":[{"date":"2026-06-03","orderCount":30,"gmv":125340.69,"paidOrders":30,"refundCount":3,"avgOrderValue":4178,"productCount":60},{"date":"2026-06-04","orderCount":123,"gmv":498715.89,"paidOrders":123,"refundCount":1,"avgOrderValue":4055,"productCount":240},{"date":"2026-06-05","orderCount":123,"gmv":462942.86,"paidOrders":123,"refundCount":6,"avgOrderValue":3764,"productCount":235},{"date":"2026-06-06","orderCount":235,"gmv":844464.95,"paidOrders":235,"refundCount":5,"avgOrderValue":3593,"productCount":450},{"date":"2026-06-07","orderCount":233,"gmv":882514.05,"paidOrders":233,"refundCount":1,"avgOrderValue":3788,"productCount":437},{"date":"2026-06-08","orderCount":224,"gmv":882810.01,"paidOrders":224,"refundCount":1,"avgOrderValue":3941,"productCount":379},{"date":"2026-06-09","orderCount":32,"gmv":117107.3,"paidOrders":31,"refundCount":0,"avgOrderValue":3660,"productCount":47}],"productRanking":[{"productName":"夸克AI眼镜S1 旗舰款","totalSales":1183741.84,"totalQty":294},{"productName":"夸克AI眼镜S1 国补近视配镜款","totalSales":615919.54,"totalQty":138},{"productName":"夸克AI眼镜S1 粉丝福利款","totalSales":348902,"totalQty":84},{"productName":"千问AI眼镜S1 国补现货速发","totalSales":323508,"totalQty":74},{"productName":"千问AI眼镜G1 国补半框方框","totalSales":212580.98,"totalQty":94},{"productName":"千问AI眼镜S1 粉丝福利国补","totalSales":205216,"totalQty":46},{"productName":"千问AI眼镜S1 配镜款","totalSales":166214,"totalQty":35},{"productName":"夸克AI眼镜S1 近视配镜款","totalSales":136609.18,"totalQty":27},{"productName":"千问AI眼镜S1 粉丝福利翻译导航","totalSales":122152,"totalQty":28},{"productName":"千问AI眼镜S1 配镜定制版","totalSales":96954,"totalQty":18}],"volatility":[{"date":"2026-06-04","gmv":498716,"gmvChange":373375,"gmvChangePercent":297.9,"orderCount":123,"orderChange":93,"avgOrderValue":4055},{"date":"2026-06-05","gmv":462943,"gmvChange":-35773,"gmvChangePercent":-7.2,"orderCount":123,"orderChange":0,"avgOrderValue":3764},{"date":"2026-06-06","gmv":844465,"gmvChange":381522,"gmvChangePercent":82.4,"orderCount":235,"orderChange":112,"avgOrderValue":3593},{"date":"2026-06-07","gmv":882514,"gmvChange":38049,"gmvChangePercent":4.5,"orderCount":233,"orderChange":-2,"avgOrderValue":3788},{"date":"2026-06-08","gmv":882810,"gmvChange":296,"gmvChangePercent":0,"orderCount":224,"orderChange":-9,"avgOrderValue":3941},{"date":"2026-06-09","gmv":117107,"gmvChange":-765703,"gmvChangePercent":-86.7,"orderCount":32,"orderChange":-192,"avgOrderValue":3660}],"attributions":[{"date":"2026-06-09","gmvChange":-765703,"gmvChangePercent":-86.7,"topDecliners":[{"productName":"粉丝福利【现货速发】夸克AI眼镜S1阿里旗舰拍照翻译导航智能眼镜","todaySales":4289,"yesterdaySales":64804,"change":-60515,"changePercent":-93.4},{"productName":"【S1近视配镜款】夸克AI眼镜S1阿里智能旗舰千问拍照翻译导航送定制","todaySales":0,"yesterdaySales":15444,"change":-15444,"changePercent":-100},{"productName":"【千问S1配镜款】千问AI眼镜S1阿里拍照翻译导航夸克智能眼镜定制镜","todaySales":0,"yesterdaySales":10036,"change":-10036,"changePercent":-100},{"productName":"【国补！S1近视配镜款】夸克AI眼镜S1阿里智能旗舰千问拍照翻译导航","todaySales":4698,"yesterdaySales":9976,"change":-5278,"changePercent":-52.9},{"productName":"【S1近视配镜款】夸克AI眼镜S1阿里智能旗舰千问拍照翻译导航送定制","todaySales":0,"yesterdaySales":5198,"change":-5198,"changePercent":-100}],"topGainers":[{"productName":"【国补现货速发】千问AI眼镜S1千问大模型阿里旗舰翻译导航智能眼镜","todaySales":56737,"yesterdaySales":0,"change":56737,"changePercent":0},{"productName":"【现货速发！国补】千问AI眼镜G1半框方框蔡司防蓝光夸克智能眼镜","todaySales":13420,"yesterdaySales":2161,"change":11259,"changePercent":520.9},{"productName":"粉丝福利【现货速发】千问AI眼镜S1千问大模型阿里旗舰翻译导航眼镜","todaySales":8848,"yesterdaySales":4299,"change":4549,"changePercent":105.8}]}]};
+
+    // Helper functions
+    function formatCurrency(val) {
+        return '¥' + Math.round(val).toLocaleString('zh-CN');
+    }
+
+    function formatNumber(val) {
+        return val.toLocaleString('zh-CN');
+    }
+
+    // Chart.js defaults
+    Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif";
+    Chart.defaults.font.size = 12;
+    Chart.defaults.color = '#666';
+
+    // ---- GMV Daily Trend Chart ----
+    const gmvCtx = document.getElementById('gmvChart').getContext('2d');
+    const gmvLabels = biData.dailyTrend.map(d => d.date.slice(5));
+    const gmvValues = biData.dailyTrend.map(d => d.gmv);
+
+    new Chart(gmvCtx, {
+        type: 'line',
+        data: {
+            labels: gmvLabels,
+            datasets: [{
+                label: 'GMV (元)',
+                data: gmvValues,
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.08)',
+                borderWidth: 2.5,
+                fill: true,
+                tension: 0.3,
+                pointBackgroundColor: '#667eea',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(26, 26, 46, 0.9)',
+                    padding: 12,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: ctx => 'GMV: ' + formatCurrency(ctx.raw)
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(0,0,0,0.04)' },
+                    ticks: {
+                        callback: val => (val >= 10000 ? (val / 10000).toFixed(0) + '万' : val)
+                    }
+                },
+                x: {
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+
+    // ---- Order Count Daily Trend Chart ----
+    const orderCtx = document.getElementById('orderChart').getContext('2d');
+    const orderValues = biData.dailyTrend.map(d => d.orderCount);
+
+    new Chart(orderCtx, {
+        type: 'line',
+        data: {
+            labels: gmvLabels,
+            datasets: [{
+                label: '订单数',
+                data: orderValues,
+                borderColor: '#764ba2',
+                backgroundColor: 'rgba(118, 75, 162, 0.08)',
+                borderWidth: 2.5,
+                fill: true,
+                tension: 0.3,
+                pointBackgroundColor: '#764ba2',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(26, 26, 46, 0.9)',
+                    padding: 12,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: ctx => '订单数: ' + ctx.raw + ' 单'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(0,0,0,0.04)' }
+                },
+                x: {
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+
+    // ---- Product Ranking Horizontal Bar Chart ----
+    const rankCtx = document.getElementById('rankingChart').getContext('2d');
+    const rankData = biData.productRanking.slice(0, 10).reverse();
+    const rankLabels = rankData.map(p => p.productName.length > 20 ? p.productName.slice(0, 20) + '...' : p.productName);
+    const rankValues = rankData.map(p => p.totalSales);
+
+    new Chart(rankCtx, {
+        type: 'bar',
+        data: {
+            labels: rankLabels,
+            datasets: [{
+                label: '销售额 (元)',
+                data: rankValues,
+                backgroundColor: [
+                    'rgba(102, 126, 234, 0.75)',
+                    'rgba(118, 75, 162, 0.75)',
+                    'rgba(240, 147, 251, 0.7)',
+                    'rgba(79, 172, 254, 0.7)',
+                    'rgba(67, 203, 255, 0.7)',
+                    'rgba(102, 126, 234, 0.55)',
+                    'rgba(118, 75, 162, 0.55)',
+                    'rgba(240, 147, 251, 0.5)',
+                    'rgba(79, 172, 254, 0.5)',
+                    'rgba(67, 203, 255, 0.5)'
+                ],
+                borderColor: [
+                    '#667eea',
+                    '#764ba2',
+                    '#f093fb',
+                    '#4facfe',
+                    '#43cbff',
+                    '#667eea',
+                    '#764ba2',
+                    '#f093fb',
+                    '#4facfe',
+                    '#43cbff'
+                ],
+                borderWidth: 1,
+                borderRadius: 4
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(26, 26, 46, 0.9)',
+                    padding: 12,
+                    cornerRadius: 8,
+                    callbacks: {
+                        title: (items) => rankData[items[0].dataIndex].productName,
+                        label: ctx => '销售额: ' + formatCurrency(ctx.raw) + '  |  ' + rankData[ctx.dataIndex].totalQty + ' 件'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(0,0,0,0.04)' },
+                    ticks: {
+                        callback: val => (val >= 10000 ? (val / 10000).toFixed(0) + '万' : val)
+                    }
+                },
+                y: {
+                    grid: { display: false },
+                    ticks: {
+                        font: { size: 11 }
+                    }
+                }
+            }
+        }
+    });
+
+    // ---- Volatility Table ----
+    const volatilityBody = document.getElementById('volatilityBody');
+    biData.volatility.forEach(v => {
+        const changeClass = v.gmvChange > 0 ? 'change-positive' : v.gmvChange < 0 ? 'change-negative' : 'change-neutral';
+        const orderChangeClass = v.orderChange > 0 ? 'change-positive' : v.orderChange < 0 ? 'change-negative' : 'change-neutral';
+        const arrow = v.gmvChange > 0 ? '&#9650; ' : v.gmvChange < 0 ? '&#9660; ' : '';
+        const orderArrow = v.orderChange > 0 ? '&#9650; ' : v.orderChange < 0 ? '&#9660; ' : '';
+
+        volatilityBody.innerHTML += `
+            <tr>
+                <td>${v.date}</td>
+                <td>${formatCurrency(v.gmv)}</td>
+                <td class="${changeClass}">${arrow}${formatCurrency(Math.abs(v.gmvChange))}</td>
+                <td class="${changeClass}">${v.gmvChangePercent > 0 ? '+' : ''}${v.gmvChangePercent}%</td>
+                <td>${formatNumber(v.orderCount)}</td>
+                <td class="${orderChangeClass}">${orderArrow}${v.orderChange > 0 ? '+' : ''}${v.orderChange} 单</td>
+                <td>${formatCurrency(v.avgOrderValue)}</td>
+            </tr>
+        `;
+    });
+
+    // ---- Attribution Section ----
+    const attribution = biData.attributions[0];
+    const declinersContainer = document.getElementById('declinersContainer');
+    const gainersContainer = document.getElementById('gainersContainer');
+
+    attribution.topDecliners.forEach(item => {
+        declinersContainer.innerHTML += `
+            <div class="attribution-item decline-item">
+                <div class="product-name" title="${item.productName}">${item.productName}</div>
+                <div class="product-stats">
+                    <span>昨日 ${formatCurrency(item.yesterdaySales)} &rarr; 今日 ${formatCurrency(item.todaySales)}</span>
+                    <span class="product-change">${item.changePercent}%</span>
+                </div>
+            </div>
+        `;
+    });
+
+    attribution.topGainers.forEach(item => {
+        gainersContainer.innerHTML += `
+            <div class="attribution-item gain-item">
+                <div class="product-name" title="${item.productName}">${item.productName}</div>
+                <div class="product-stats">
+                    <span>昨日 ${formatCurrency(item.yesterdaySales)} &rarr; 今日 ${formatCurrency(item.todaySales)}</span>
+                    <span class="product-change">+${item.changePercent > 0 ? item.changePercent + '%' : '新增'}</span>
+                </div>
+            </div>
+        `;
+    });
+    </script>
+</body>
+</html>
