@@ -1,653 +1,194 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>抖音小店数据BI看板</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-            background: #f0f2f5;
-            color: #1a1a2e;
-            line-height: 1.6;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 32px 40px;
-            color: white;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .header .subtitle {
-            font-size: 14px;
-            opacity: 0.85;
-            margin-top: 6px;
-            font-weight: 400;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 24px 32px 48px;
-        }
-
-        /* KPI Cards */
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 28px;
-        }
-
-        .kpi-card {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .kpi-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .kpi-card .kpi-label {
-            font-size: 13px;
-            color: #8c8c8c;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-
-        .kpi-card .kpi-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #1a1a2e;
-        }
-
-        .kpi-card .kpi-unit {
-            font-size: 14px;
-            color: #8c8c8c;
-            font-weight: 400;
-            margin-left: 4px;
-        }
-
-        .kpi-card .kpi-sub {
-            font-size: 12px;
-            color: #a0a0a0;
-            margin-top: 6px;
-        }
-
-        .kpi-card:nth-child(1) { border-top: 3px solid #667eea; }
-        .kpi-card:nth-child(2) { border-top: 3px solid #764ba2; }
-        .kpi-card:nth-child(3) { border-top: 3px solid #f093fb; }
-        .kpi-card:nth-child(4) { border-top: 3px solid #4facfe; }
-
-        /* Chart Section */
-        .chart-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 28px;
-        }
-
-        .chart-card {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-        }
-
-        .chart-card.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .chart-card h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1a1a2e;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .chart-wrapper {
-            position: relative;
-            height: 300px;
-        }
-
-        .chart-wrapper.tall {
-            height: 420px;
-        }
-
-        /* Volatility Table */
-        .volatility-section {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-            margin-bottom: 28px;
-        }
-
-        .volatility-section h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1a1a2e;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        .data-table th {
-            background: #f8f9fc;
-            padding: 12px 16px;
-            text-align: left;
-            font-weight: 600;
-            color: #555;
-            border-bottom: 2px solid #e8e8e8;
-        }
-
-        .data-table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .data-table tr:hover td {
-            background: #fafbff;
-        }
-
-        .change-positive {
-            color: #52c41a;
-            font-weight: 600;
-        }
-
-        .change-negative {
-            color: #ff4d4f;
-            font-weight: 600;
-        }
-
-        .change-neutral {
-            color: #8c8c8c;
-        }
-
-        /* Attribution Section */
-        .attribution-section {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-            margin-bottom: 28px;
-        }
-
-        .attribution-section h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1a1a2e;
-            margin-bottom: 6px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .attribution-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .attribution-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .badge-decline {
-            background: #fff1f0;
-            color: #ff4d4f;
-        }
-
-        .badge-gain {
-            background: #f6ffed;
-            color: #52c41a;
-        }
-
-        .attribution-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-
-        .attribution-column h4 {
-            font-size: 14px;
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .attribution-item {
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #f0f0f0;
-            transition: background 0.15s;
-        }
-
-        .attribution-item:hover {
-            background: #fafbff;
-        }
-
-        .attribution-item .product-name {
-            font-size: 13px;
-            color: #333;
-            font-weight: 500;
-            margin-bottom: 6px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .attribution-item .product-stats {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #888;
-        }
-
-        .attribution-item .product-change {
-            font-weight: 600;
-        }
-
-        .decline-item .product-change { color: #ff4d4f; }
-        .gain-item .product-change { color: #52c41a; }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: #bbb;
-            font-size: 12px;
-        }
-
-        @media (max-width: 1024px) {
-            .kpi-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .chart-grid {
-                grid-template-columns: 1fr;
-            }
-            .attribution-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>抖音小店数据BI看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'PingFang SC', sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; }
+.header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 32px 40px; box-shadow: 0 4px 20px rgba(102,126,234,0.3); }
+.header h1 { font-size: 28px; font-weight: 700; letter-spacing: 1px; }
+.header .subtitle { opacity: 0.85; margin-top: 8px; font-size: 14px; }
+.container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 28px; }
+.kpi-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s; }
+.kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+.kpi-label { font-size: 13px; color: #8c8c8c; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+.kpi-value { font-size: 32px; font-weight: 700; margin: 8px 0 4px; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.kpi-sub { font-size: 12px; color: #bbb; }
+.chart-section { background: white; border-radius: 16px; padding: 28px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.chart-section h2 { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #2d2d2d; }
+.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+@media (max-width: 900px) { .chart-row { grid-template-columns: 1fr; } }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: #f8f9fc; padding: 12px 16px; text-align: left; font-weight: 600; color: #555; border-bottom: 2px solid #eee; }
+td { padding: 10px 16px; border-bottom: 1px solid #f0f0f0; }
+tr:hover td { background: #fafbff; }
+.positive { color: #10b981; font-weight: 600; }
+.negative { color: #ef4444; font-weight: 600; }
+.attribution-card { background: #fafbff; border-radius: 12px; padding: 20px; margin-bottom: 16px; border-left: 4px solid #667eea; }
+.attribution-card h3 { font-size: 15px; margin-bottom: 12px; }
+.attr-items { display: flex; flex-wrap: wrap; gap: 8px; }
+.attr-item { background: white; border-radius: 8px; padding: 8px 12px; font-size: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.footer { text-align: center; padding: 20px; color: #999; font-size: 12px; }
+</style>
 </head>
 <body>
-    <div class="header">
-        <h1>抖音小店数据BI看板</h1>
-        <div class="subtitle">数据周期：2026-06-03 至 2026-06-09 | 共 7 天</div>
+<div class="header">
+  <h1>抖音小店数据BI看板</h1>
+  <div class="subtitle">数据周期：2026-06-03 至 2026-06-09 ｜ 更新时间：2026/6/9 11:35:44</div>
+</div>
+<div class="container">
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-label">总GMV</div><div class="kpi-value">¥381.3万</div><div class="kpi-sub">日均 ¥54.5万</div></div>
+    <div class="kpi-card"><div class="kpi-label">总订单</div><div class="kpi-value">1,000</div><div class="kpi-sub">日均 143 单</div></div>
+    <div class="kpi-card"><div class="kpi-label">客单价</div><div class="kpi-value">¥3,813</div><div class="kpi-sub">7 天数据</div></div>
+    <div class="kpi-card"><div class="kpi-label">在售商品</div><div class="kpi-value">38</div><div class="kpi-sub">SKU数</div></div>
+  </div>
+
+  <div class="chart-row">
+    <div class="chart-section"><h2>📈 每日GMV趋势</h2><canvas id="gmvChart"></canvas></div>
+    <div class="chart-section"><h2>📦 每日订单量</h2><canvas id="orderChart"></canvas></div>
+  </div>
+
+  <div class="chart-section">
+    <h2>🏆 商品销售排行 TOP10</h2>
+    <canvas id="productChart" height="200"></canvas>
+  </div>
+
+  <div class="chart-section">
+    <h2>📊 日环比波动分析</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>日期</th><th>GMV</th><th>环比变化</th><th>变化率</th><th>订单量</th><th>订单变化</th><th>客单价</th></tr></thead>
+        <tbody><tr>
+          <td>2026-06-04</td>
+          <td>¥494,117</td>
+          <td class="positive">+¥403,626</td>
+          <td class="positive">+446%</td>
+          <td>122</td>
+          <td class="positive">+100</td>
+          <td>¥4,050</td>
+        </tr><tr>
+          <td>2026-06-05</td>
+          <td>¥462,943</td>
+          <td class="negative">¥-31,174</td>
+          <td class="negative">-6.3%</td>
+          <td>123</td>
+          <td class="positive">+1</td>
+          <td>¥3,764</td>
+        </tr><tr>
+          <td>2026-06-06</td>
+          <td>¥844,465</td>
+          <td class="positive">+¥381,522</td>
+          <td class="positive">+82.4%</td>
+          <td>235</td>
+          <td class="positive">+112</td>
+          <td>¥3,593</td>
+        </tr><tr>
+          <td>2026-06-07</td>
+          <td>¥874,167</td>
+          <td class="positive">+¥29,702</td>
+          <td class="positive">+3.5%</td>
+          <td>231</td>
+          <td class="negative">-4</td>
+          <td>¥3,784</td>
+        </tr><tr>
+          <td>2026-06-08</td>
+          <td>¥878,112</td>
+          <td class="positive">+¥3,945</td>
+          <td class="positive">+0.5%</td>
+          <td>223</td>
+          <td class="negative">-8</td>
+          <td>¥3,938</td>
+        </tr><tr>
+          <td>2026-06-09</td>
+          <td>¥168,377</td>
+          <td class="negative">¥-709,735</td>
+          <td class="negative">-80.8%</td>
+          <td>44</td>
+          <td class="negative">-179</td>
+          <td>¥3,827</td>
+        </tr></tbody>
+      </table>
     </div>
+  </div>
 
-    <div class="container">
-        <!-- KPI Cards -->
-        <div class="kpi-grid">
-            <div class="kpi-card">
-                <div class="kpi-label">总 GMV</div>
-                <div class="kpi-value">381.39<span class="kpi-unit">万元</span></div>
-                <div class="kpi-sub">日均 GMV ¥544,842</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-label">总订单数</div>
-                <div class="kpi-value">1,000<span class="kpi-unit">单</span></div>
-                <div class="kpi-sub">日均 143 单</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-label">客单价</div>
-                <div class="kpi-value">3,814<span class="kpi-unit">元</span></div>
-                <div class="kpi-sub">周期内平均</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-label">在售商品数</div>
-                <div class="kpi-value">38<span class="kpi-unit">款</span></div>
-                <div class="kpi-sub">有成交记录商品</div>
-            </div>
-        </div>
-
-        <!-- Charts Row -->
-        <div class="chart-grid">
-            <div class="chart-card">
-                <h3>GMV 日趋势</h3>
-                <div class="chart-wrapper">
-                    <canvas id="gmvChart"></canvas>
-                </div>
-            </div>
-            <div class="chart-card">
-                <h3>订单量日趋势</h3>
-                <div class="chart-wrapper">
-                    <canvas id="orderChart"></canvas>
-                </div>
-            </div>
-            <div class="chart-card full-width">
-                <h3>商品销售额 TOP 10 排行</h3>
-                <div class="chart-wrapper tall">
-                    <canvas id="rankingChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Volatility Section -->
-        <div class="volatility-section">
-            <h3>日环比波动分析</h3>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>日期</th>
-                        <th>GMV (元)</th>
-                        <th>环比变化</th>
-                        <th>环比幅度</th>
-                        <th>订单数</th>
-                        <th>订单环比</th>
-                        <th>客单价 (元)</th>
-                    </tr>
-                </thead>
-                <tbody id="volatilityBody">
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Attribution Section -->
-        <div class="attribution-section">
-            <h3>GMV 变动归因分析</h3>
-            <div class="attribution-header">
-                <span class="attribution-badge badge-decline">2026-06-09 GMV 环比下降 86.7%</span>
-            </div>
-            <div class="attribution-grid">
-                <div class="attribution-column">
-                    <h4><span style="color:#ff4d4f;">&#9660;</span> 下滑商品 TOP 5</h4>
-                    <div id="declinersContainer"></div>
-                </div>
-                <div class="attribution-column">
-                    <h4><span style="color:#52c41a;">&#9650;</span> 增长商品 TOP 3</h4>
-                    <div id="gainersContainer"></div>
-                </div>
-            </div>
-        </div>
+  <div class="chart-section">
+    <h2>🔍 波动归因分析</h2>
+    <div class="attribution-card">
+      <h3>2026-06-04：GMV 上升 446%（+¥403,626）</h3>
+      
+      <p style="font-size:13px;color:#666;margin:12px 0 8px">⬆️ 主要增长商品：</p><div class="attr-items"><div class="attr-item"><b>粉丝福利【现货速发】夸克AI眼镜S1阿里旗舰拍照翻</b><br>变化: <span class="positive">+¥139,647</span></div><div class="attr-item"><b>粉丝福利【现货速发！国补】千问AI眼镜S1阿里旗舰</b><br>变化: <span class="positive">+¥67,779</span></div><div class="attr-item"><b>【S1近视配镜款】夸克AI眼镜S1阿里智能旗舰千问</b><br>变化: <span class="positive">+¥50,935</span></div><div class="attr-item"><b>【现货速发！】夸克AI眼镜S1阿里旗舰拍照翻译导航</b><br>变化: <span class="positive">+¥28,853</span></div><div class="attr-item"><b>【千问S1配镜款】千问AI眼镜S1阿里拍照翻译导航</b><br>变化: <span class="positive">+¥26,845</span></div></div>
+    </div><div class="attribution-card">
+      <h3>2026-06-06：GMV 上升 82.4%（+¥381,522）</h3>
+      
+      <p style="font-size:13px;color:#666;margin:12px 0 8px">⬆️ 主要增长商品：</p><div class="attr-items"><div class="attr-item"><b>【现货速发！】夸克AI眼镜S1阿里旗舰拍照翻译导航</b><br>变化: <span class="positive">+¥275,529</span></div><div class="attr-item"><b>【国补！S1近视配镜款】夸克AI眼镜S1阿里智能旗</b><br>变化: <span class="positive">+¥98,961</span></div><div class="attr-item"><b>粉丝福利【现货速发！国补】千问AI眼镜S1阿里旗舰</b><br>变化: <span class="positive">+¥43,858</span></div><div class="attr-item"><b>【现货速发！国补】千问AI眼镜G1半框方框蔡司防蓝</b><br>变化: <span class="positive">+¥26,245</span></div><div class="attr-item"><b>【千问S1配镜款】千问AI眼镜S1阿里拍照翻译导航</b><br>变化: <span class="positive">+¥17,008</span></div></div>
+    </div><div class="attribution-card">
+      <h3>2026-06-09：GMV 下降 80.8%（¥-709,735）</h3>
+      <p style="font-size:13px;color:#666;margin-bottom:8px">⬇️ 主要下降商品：</p><div class="attr-items"><div class="attr-item"><b>【现货速发！】夸克AI眼镜S1阿里旗舰拍照翻译导航</b><br>变化: <span class="negative">¥-170,582</span></div><div class="attr-item"><b>【国补现货速发】千问AI眼镜S1千问大模型阿里旗舰</b><br>变化: <span class="negative">¥-138,219</span></div><div class="attr-item"><b>【国补！S1近视配镜款】夸克AI眼镜S1阿里智能旗</b><br>变化: <span class="negative">¥-92,066</span></div><div class="attr-item"><b>【千问S1配镜款】千问AI眼镜S1阿里拍照翻译导航</b><br>变化: <span class="negative">¥-62,974</span></div><div class="attr-item"><b>【现货速发！国补】千问AI眼镜G1半框方框蔡司防蓝</b><br>变化: <span class="negative">¥-48,125</span></div></div>
+      
     </div>
+  </div>
+</div>
 
-    <div class="footer">
-        抖音小店数据BI看板 &mdash; 数据自动生成
-    </div>
+<div class="footer">抖音小店数据BI看板 · 自动更新 · Powered by QoderWork</div>
 
-    <script>
-    // Embedded data
-    const biData = {"summary":{"period":{"start":"2026-06-03","end":"2026-06-09"},"totalGMV":3813896,"totalOrders":1000,"avgDailyGMV":544842,"avgOrderValue":3814,"daysCount":7,"productCount":38},"dailyTrend":[{"date":"2026-06-03","orderCount":30,"gmv":125340.69,"paidOrders":30,"refundCount":3,"avgOrderValue":4178,"productCount":60},{"date":"2026-06-04","orderCount":123,"gmv":498715.89,"paidOrders":123,"refundCount":1,"avgOrderValue":4055,"productCount":240},{"date":"2026-06-05","orderCount":123,"gmv":462942.86,"paidOrders":123,"refundCount":6,"avgOrderValue":3764,"productCount":235},{"date":"2026-06-06","orderCount":235,"gmv":844464.95,"paidOrders":235,"refundCount":5,"avgOrderValue":3593,"productCount":450},{"date":"2026-06-07","orderCount":233,"gmv":882514.05,"paidOrders":233,"refundCount":1,"avgOrderValue":3788,"productCount":437},{"date":"2026-06-08","orderCount":224,"gmv":882810.01,"paidOrders":224,"refundCount":1,"avgOrderValue":3941,"productCount":379},{"date":"2026-06-09","orderCount":32,"gmv":117107.3,"paidOrders":31,"refundCount":0,"avgOrderValue":3660,"productCount":47}],"productRanking":[{"productName":"夸克AI眼镜S1 旗舰款","totalSales":1183741.84,"totalQty":294},{"productName":"夸克AI眼镜S1 国补近视配镜款","totalSales":615919.54,"totalQty":138},{"productName":"夸克AI眼镜S1 粉丝福利款","totalSales":348902,"totalQty":84},{"productName":"千问AI眼镜S1 国补现货速发","totalSales":323508,"totalQty":74},{"productName":"千问AI眼镜G1 国补半框方框","totalSales":212580.98,"totalQty":94},{"productName":"千问AI眼镜S1 粉丝福利国补","totalSales":205216,"totalQty":46},{"productName":"千问AI眼镜S1 配镜款","totalSales":166214,"totalQty":35},{"productName":"夸克AI眼镜S1 近视配镜款","totalSales":136609.18,"totalQty":27},{"productName":"千问AI眼镜S1 粉丝福利翻译导航","totalSales":122152,"totalQty":28},{"productName":"千问AI眼镜S1 配镜定制版","totalSales":96954,"totalQty":18}],"volatility":[{"date":"2026-06-04","gmv":498716,"gmvChange":373375,"gmvChangePercent":297.9,"orderCount":123,"orderChange":93,"avgOrderValue":4055},{"date":"2026-06-05","gmv":462943,"gmvChange":-35773,"gmvChangePercent":-7.2,"orderCount":123,"orderChange":0,"avgOrderValue":3764},{"date":"2026-06-06","gmv":844465,"gmvChange":381522,"gmvChangePercent":82.4,"orderCount":235,"orderChange":112,"avgOrderValue":3593},{"date":"2026-06-07","gmv":882514,"gmvChange":38049,"gmvChangePercent":4.5,"orderCount":233,"orderChange":-2,"avgOrderValue":3788},{"date":"2026-06-08","gmv":882810,"gmvChange":296,"gmvChangePercent":0,"orderCount":224,"orderChange":-9,"avgOrderValue":3941},{"date":"2026-06-09","gmv":117107,"gmvChange":-765703,"gmvChangePercent":-86.7,"orderCount":32,"orderChange":-192,"avgOrderValue":3660}],"attributions":[{"date":"2026-06-09","gmvChange":-765703,"gmvChangePercent":-86.7,"topDecliners":[{"productName":"粉丝福利【现货速发】夸克AI眼镜S1阿里旗舰拍照翻译导航智能眼镜","todaySales":4289,"yesterdaySales":64804,"change":-60515,"changePercent":-93.4},{"productName":"【S1近视配镜款】夸克AI眼镜S1阿里智能旗舰千问拍照翻译导航送定制","todaySales":0,"yesterdaySales":15444,"change":-15444,"changePercent":-100},{"productName":"【千问S1配镜款】千问AI眼镜S1阿里拍照翻译导航夸克智能眼镜定制镜","todaySales":0,"yesterdaySales":10036,"change":-10036,"changePercent":-100},{"productName":"【国补！S1近视配镜款】夸克AI眼镜S1阿里智能旗舰千问拍照翻译导航","todaySales":4698,"yesterdaySales":9976,"change":-5278,"changePercent":-52.9},{"productName":"【S1近视配镜款】夸克AI眼镜S1阿里智能旗舰千问拍照翻译导航送定制","todaySales":0,"yesterdaySales":5198,"change":-5198,"changePercent":-100}],"topGainers":[{"productName":"【国补现货速发】千问AI眼镜S1千问大模型阿里旗舰翻译导航智能眼镜","todaySales":56737,"yesterdaySales":0,"change":56737,"changePercent":0},{"productName":"【现货速发！国补】千问AI眼镜G1半框方框蔡司防蓝光夸克智能眼镜","todaySales":13420,"yesterdaySales":2161,"change":11259,"changePercent":520.9},{"productName":"粉丝福利【现货速发】千问AI眼镜S1千问大模型阿里旗舰翻译导航眼镜","todaySales":8848,"yesterdaySales":4299,"change":4549,"changePercent":105.8}]}]};
+<script>
+const dailyTrend = [{"date":"2026-06-03","orderCount":22,"gmv":90490.69,"paidOrders":22,"refundCount":2,"avgOrderValue":4113,"productCount":44},{"date":"2026-06-04","orderCount":122,"gmv":494116.88999999996,"paidOrders":122,"refundCount":1,"avgOrderValue":4050,"productCount":238},{"date":"2026-06-05","orderCount":123,"gmv":462942.85999999987,"paidOrders":123,"refundCount":6,"avgOrderValue":3764,"productCount":235},{"date":"2026-06-06","orderCount":235,"gmv":844464.9499999998,"paidOrders":235,"refundCount":5,"avgOrderValue":3593,"productCount":450},{"date":"2026-06-07","orderCount":231,"gmv":874167.0499999996,"paidOrders":231,"refundCount":1,"avgOrderValue":3784,"productCount":433},{"date":"2026-06-08","orderCount":223,"gmv":878112.0099999997,"paidOrders":223,"refundCount":1,"avgOrderValue":3938,"productCount":377},{"date":"2026-06-09","orderCount":44,"gmv":168377.39999999997,"paidOrders":44,"refundCount":0,"avgOrderValue":3827,"productCount":68}];
+const productRanking = [{"productId":"3820211135483871259","productName":"【现货速发！】夸克AI眼镜S1阿里旗舰拍照翻译导航夸克智能眼镜","totalSales":1187610.8399999999,"totalQty":295,"orderCount":295,"dailySales":{"2026-06-09":{"sales":19945,"qty":5},"2026-06-08":{"sales":190527,"qty":46},"2026-06-07":{"sales":399094.83999999997,"qty":100},"2026-06-06":{"sales":412360,"qty":104},"2026-06-05":{"sales":136831,"qty":33},"2026-06-04":{"sales":28853,"qty":7}}},{"productId":"3821088887078518823","productName":"【国补！S1近视配镜款】夸克AI眼镜S1阿里智能旗舰千问拍照翻译导航","totalSales":606703.54,"totalQty":136,"orderCount":136,"dailySales":{"2026-06-09":{"sales":4698,"qty":1},"2026-06-08":{"sales":96764,"qty":21},"2026-06-07":{"sales":200858.38999999998,"qty":46},"2026-06-06":{"sales":181325.15000000002,"qty":43},"2026-06-05":{"sales":82364,"qty":17},"2026-06-04":{"sales":30718,"qty":6},"2026-06-03":{"sales":9976,"qty":2}}},{"productId":"3823894351185052125","productName":"【国补现货速发】千问AI眼镜S1千问大模型阿里旗舰翻译导航智能眼镜","totalSales":341204,"totalQty":78,"orderCount":78,"dailySales":{"2026-06-09":{"sales":74433,"qty":17},"2026-06-08":{"sales":212652,"qty":48},"2026-06-07":{"sales":41762,"qty":10},"2026-06-06":{"sales":7758,"qty":2},"2026-06-05":{"sales":4599,"qty":1}}},{"productId":"3786064682893312668","productName":"粉丝福利【现货速发】夸克AI眼镜S1阿里旗舰拍照翻译导航智能眼镜","totalSales":332986,"totalQty":80,"orderCount":80,"dailySales":{"2026-06-09":{"sales":4289,"qty":1},"2026-06-08":{"sales":12297,"qty":3},"2026-06-07":{"sales":8298,"qty":2},"2026-06-06":{"sales":8598,"qty":2},"2026-06-05":{"sales":62081,"qty":15},"2026-06-04":{"sales":188535,"qty":45},"2026-06-03":{"sales":48888,"qty":12}}},{"productId":"3810415090239406141","productName":"【现货速发！国补】千问AI眼镜G1半框方框蔡司防蓝光夸克智能眼镜","totalSales":214845.0799999999,"totalQty":95,"orderCount":95,"dailySales":{"2026-06-09":{"sales":15684.09,"qty":7},"2026-06-08":{"sales":63809.36999999998,"qty":28},"2026-06-07":{"sales":65545.62999999998,"qty":29},"2026-06-06":{"sales":44468.09999999999,"qty":20},"2026-06-05":{"sales":18223.39,"qty":8},"2026-06-04":{"sales":4953.01,"qty":2},"2026-06-03":{"sales":2161.49,"qty":1}}},{"productId":"3814083153396629588","productName":"粉丝福利【现货速发！国补】千问AI眼镜S1阿里旗舰拍照翻译导航眼镜","totalSales":200617,"totalQty":45,"orderCount":45,"dailySales":{"2026-06-09":{"sales":4299,"qty":1},"2026-06-08":{"sales":48789,"qty":11},"2026-06-07":{"sales":18096,"qty":4},"2026-06-06":{"sales":52756,"qty":12},"2026-06-05":{"sales":8898,"qty":2},"2026-06-04":{"sales":67779,"qty":15}}},{"productId":"3823732643443376321","productName":"【千问S1配镜款】千问AI眼镜S1阿里拍照翻译导航夸克智能眼镜定制镜","totalSales":180928,"totalQty":38,"orderCount":38,"dailySales":{"2026-06-09":{"sales":19232,"qty":4},"2026-06-08":{"sales":82206,"qty":17},"2026-06-07":{"sales":51858,"qty":11},"2026-06-06":{"sales":22320,"qty":5},"2026-06-05":{"sales":5312,"qty":1}}},{"productId":"3819990120745009551","productName":"【S1近视配镜款】夸克AI眼镜S1阿里智能旗舰千问拍照翻译导航送定制","totalSales":136609.18,"totalQty":27,"orderCount":27,"dailySales":{"2026-06-07":{"sales":4298,"qty":1},"2026-06-06":{"sales":20080.18,"qty":4},"2026-06-05":{"sales":30408,"qty":6},"2026-06-04":{"sales":66379,"qty":13},"2026-06-03":{"sales":15444,"qty":3}}},{"productId":"3820211423238291494","productName":"粉丝福利【现货速发】千问AI眼镜S1千问大模型阿里旗舰翻译导航眼镜","totalSales":126751,"totalQty":29,"orderCount":29,"dailySales":{"2026-06-09":{"sales":13447,"qty":3},"2026-06-08":{"sales":34392,"qty":8},"2026-06-07":{"sales":8898,"qty":2},"2026-06-06":{"sales":30423,"qty":7},"2026-06-05":{"sales":26694,"qty":6},"2026-06-04":{"sales":8598,"qty":2},"2026-06-03":{"sales":4299,"qty":1}}},{"productId":"3810408817397727452","productName":"粉丝福利【现货速发国补】夸克AI眼镜S1阿里旗舰拍照翻译导航眼镜","totalSales":93907,"totalQty":23,"orderCount":23,"dailySales":{"2026-06-08":{"sales":37191,"qty":9},"2026-06-07":{"sales":4299,"qty":1},"2026-06-06":{"sales":7998,"qty":2},"2026-06-05":{"sales":28123,"qty":7},"2026-06-04":{"sales":16296,"qty":4}}}];
 
-    // Helper functions
-    function formatCurrency(val) {
-        return '¥' + Math.round(val).toLocaleString('zh-CN');
-    }
+// GMV Chart
+new Chart(document.getElementById('gmvChart'), {
+  type: 'line',
+  data: {
+    labels: dailyTrend.map(d => d.date.substring(5)),
+    datasets: [{
+      label: 'GMV (万元)',
+      data: dailyTrend.map(d => Math.round(d.gmv / 10000 * 10) / 10),
+      borderColor: '#667eea',
+      backgroundColor: 'rgba(102,126,234,0.1)',
+      fill: true,
+      tension: 0.4,
+      pointRadius: 5,
+      pointBackgroundColor: '#667eea'
+    }]
+  },
+  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
 
-    function formatNumber(val) {
-        return val.toLocaleString('zh-CN');
-    }
+// Order Chart
+new Chart(document.getElementById('orderChart'), {
+  type: 'bar',
+  data: {
+    labels: dailyTrend.map(d => d.date.substring(5)),
+    datasets: [{
+      label: '订单量',
+      data: dailyTrend.map(d => d.orderCount),
+      backgroundColor: 'rgba(118,75,162,0.7)',
+      borderRadius: 6
+    }]
+  },
+  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
 
-    // Chart.js defaults
-    Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif";
-    Chart.defaults.font.size = 12;
-    Chart.defaults.color = '#666';
-
-    // ---- GMV Daily Trend Chart ----
-    const gmvCtx = document.getElementById('gmvChart').getContext('2d');
-    const gmvLabels = biData.dailyTrend.map(d => d.date.slice(5));
-    const gmvValues = biData.dailyTrend.map(d => d.gmv);
-
-    new Chart(gmvCtx, {
-        type: 'line',
-        data: {
-            labels: gmvLabels,
-            datasets: [{
-                label: 'GMV (元)',
-                data: gmvValues,
-                borderColor: '#667eea',
-                backgroundColor: 'rgba(102, 126, 234, 0.08)',
-                borderWidth: 2.5,
-                fill: true,
-                tension: 0.3,
-                pointBackgroundColor: '#667eea',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2,
-                pointRadius: 5,
-                pointHoverRadius: 7
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: 'rgba(26, 26, 46, 0.9)',
-                    padding: 12,
-                    cornerRadius: 8,
-                    callbacks: {
-                        label: ctx => 'GMV: ' + formatCurrency(ctx.raw)
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: { color: 'rgba(0,0,0,0.04)' },
-                    ticks: {
-                        callback: val => (val >= 10000 ? (val / 10000).toFixed(0) + '万' : val)
-                    }
-                },
-                x: {
-                    grid: { display: false }
-                }
-            }
-        }
-    });
-
-    // ---- Order Count Daily Trend Chart ----
-    const orderCtx = document.getElementById('orderChart').getContext('2d');
-    const orderValues = biData.dailyTrend.map(d => d.orderCount);
-
-    new Chart(orderCtx, {
-        type: 'line',
-        data: {
-            labels: gmvLabels,
-            datasets: [{
-                label: '订单数',
-                data: orderValues,
-                borderColor: '#764ba2',
-                backgroundColor: 'rgba(118, 75, 162, 0.08)',
-                borderWidth: 2.5,
-                fill: true,
-                tension: 0.3,
-                pointBackgroundColor: '#764ba2',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2,
-                pointRadius: 5,
-                pointHoverRadius: 7
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: 'rgba(26, 26, 46, 0.9)',
-                    padding: 12,
-                    cornerRadius: 8,
-                    callbacks: {
-                        label: ctx => '订单数: ' + ctx.raw + ' 单'
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: { color: 'rgba(0,0,0,0.04)' }
-                },
-                x: {
-                    grid: { display: false }
-                }
-            }
-        }
-    });
-
-    // ---- Product Ranking Horizontal Bar Chart ----
-    const rankCtx = document.getElementById('rankingChart').getContext('2d');
-    const rankData = biData.productRanking.slice(0, 10).reverse();
-    const rankLabels = rankData.map(p => p.productName.length > 20 ? p.productName.slice(0, 20) + '...' : p.productName);
-    const rankValues = rankData.map(p => p.totalSales);
-
-    new Chart(rankCtx, {
-        type: 'bar',
-        data: {
-            labels: rankLabels,
-            datasets: [{
-                label: '销售额 (元)',
-                data: rankValues,
-                backgroundColor: [
-                    'rgba(102, 126, 234, 0.75)',
-                    'rgba(118, 75, 162, 0.75)',
-                    'rgba(240, 147, 251, 0.7)',
-                    'rgba(79, 172, 254, 0.7)',
-                    'rgba(67, 203, 255, 0.7)',
-                    'rgba(102, 126, 234, 0.55)',
-                    'rgba(118, 75, 162, 0.55)',
-                    'rgba(240, 147, 251, 0.5)',
-                    'rgba(79, 172, 254, 0.5)',
-                    'rgba(67, 203, 255, 0.5)'
-                ],
-                borderColor: [
-                    '#667eea',
-                    '#764ba2',
-                    '#f093fb',
-                    '#4facfe',
-                    '#43cbff',
-                    '#667eea',
-                    '#764ba2',
-                    '#f093fb',
-                    '#4facfe',
-                    '#43cbff'
-                ],
-                borderWidth: 1,
-                borderRadius: 4
-            }]
-        },
-        options: {
-            indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: 'rgba(26, 26, 46, 0.9)',
-                    padding: 12,
-                    cornerRadius: 8,
-                    callbacks: {
-                        title: (items) => rankData[items[0].dataIndex].productName,
-                        label: ctx => '销售额: ' + formatCurrency(ctx.raw) + '  |  ' + rankData[ctx.dataIndex].totalQty + ' 件'
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    grid: { color: 'rgba(0,0,0,0.04)' },
-                    ticks: {
-                        callback: val => (val >= 10000 ? (val / 10000).toFixed(0) + '万' : val)
-                    }
-                },
-                y: {
-                    grid: { display: false },
-                    ticks: {
-                        font: { size: 11 }
-                    }
-                }
-            }
-        }
-    });
-
-    // ---- Volatility Table ----
-    const volatilityBody = document.getElementById('volatilityBody');
-    biData.volatility.forEach(v => {
-        const changeClass = v.gmvChange > 0 ? 'change-positive' : v.gmvChange < 0 ? 'change-negative' : 'change-neutral';
-        const orderChangeClass = v.orderChange > 0 ? 'change-positive' : v.orderChange < 0 ? 'change-negative' : 'change-neutral';
-        const arrow = v.gmvChange > 0 ? '&#9650; ' : v.gmvChange < 0 ? '&#9660; ' : '';
-        const orderArrow = v.orderChange > 0 ? '&#9650; ' : v.orderChange < 0 ? '&#9660; ' : '';
-
-        volatilityBody.innerHTML += `
-            <tr>
-                <td>${v.date}</td>
-                <td>${formatCurrency(v.gmv)}</td>
-                <td class="${changeClass}">${arrow}${formatCurrency(Math.abs(v.gmvChange))}</td>
-                <td class="${changeClass}">${v.gmvChangePercent > 0 ? '+' : ''}${v.gmvChangePercent}%</td>
-                <td>${formatNumber(v.orderCount)}</td>
-                <td class="${orderChangeClass}">${orderArrow}${v.orderChange > 0 ? '+' : ''}${v.orderChange} 单</td>
-                <td>${formatCurrency(v.avgOrderValue)}</td>
-            </tr>
-        `;
-    });
-
-    // ---- Attribution Section ----
-    const attribution = biData.attributions[0];
-    const declinersContainer = document.getElementById('declinersContainer');
-    const gainersContainer = document.getElementById('gainersContainer');
-
-    attribution.topDecliners.forEach(item => {
-        declinersContainer.innerHTML += `
-            <div class="attribution-item decline-item">
-                <div class="product-name" title="${item.productName}">${item.productName}</div>
-                <div class="product-stats">
-                    <span>昨日 ${formatCurrency(item.yesterdaySales)} &rarr; 今日 ${formatCurrency(item.todaySales)}</span>
-                    <span class="product-change">${item.changePercent}%</span>
-                </div>
-            </div>
-        `;
-    });
-
-    attribution.topGainers.forEach(item => {
-        gainersContainer.innerHTML += `
-            <div class="attribution-item gain-item">
-                <div class="product-name" title="${item.productName}">${item.productName}</div>
-                <div class="product-stats">
-                    <span>昨日 ${formatCurrency(item.yesterdaySales)} &rarr; 今日 ${formatCurrency(item.todaySales)}</span>
-                    <span class="product-change">+${item.changePercent > 0 ? item.changePercent + '%' : '新增'}</span>
-                </div>
-            </div>
-        `;
-    });
-    </script>
+// Product Chart
+new Chart(document.getElementById('productChart'), {
+  type: 'bar',
+  data: {
+    labels: productRanking.map(p => p.productName.substring(0, 20) + '...'),
+    datasets: [{
+      label: '销售额 (万元)',
+      data: productRanking.map(p => Math.round(p.totalSales / 10000 * 10) / 10),
+      backgroundColor: ['#667eea','#764ba2','#f093fb','#f5576c','#4facfe','#00f2fe','#43e97b','#fa709a','#fee140','#a18cd1'],
+      borderRadius: 6
+    }]
+  },
+  options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } } }
+});
+</script>
 </body>
 </html>
